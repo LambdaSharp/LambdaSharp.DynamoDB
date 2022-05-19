@@ -10,7 +10,6 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="ArgumentAssert" Version="1.0.0" />
-    <PackageReference Include="AWSSDK.DynamoDBv2" Version="3.7.3.6" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Source\LambdaSharp.DynamoDB.Native\LambdaSharp.DynamoDB.Native.csproj" />
