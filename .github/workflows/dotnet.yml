@@ -1,0 +1,50 @@
+name: Publish Package
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 6.0.x
+
+      # Build LambdaSharp.DynamoDB.Serialization
+      - name: Restore dependencies
+        run: dotnet restore Source/LambdaSharp.DynamoDB.Serialization/LambdaSharp.DynamoDB.Serialization.csproj
+      - name: Build
+        run: dotnet build --no-restore Source/LambdaSharp.DynamoDB.Serialization/LambdaSharp.DynamoDB.Serialization.csproj
+
+      # Build LambdaSharp.DynamoDB.Native
+      - name: Restore dependencies
+        run: dotnet restore Source/LambdaSharp.DynamoDB.Native/LambdaSharp.DynamoDB.Native.csproj
+      - name: Build
+        run: dotnet build --no-restore Source/LambdaSharp.DynamoDB.Native/LambdaSharp.DynamoDB.Native.csproj
+
+      # Build Samples
+      - name: Build DynamoDBNativeSample Sample
+        run: dotnet build Samples/DynamoDBNativeSample/DynamoDBNativeSample.csproj
+
+      # Publish LambdaSharp.DynamoDB.Serialization
+      - name: Publish
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: brandedoutcast/publish-nuget@v2.5.5
+        with:
+            PROJECT_FILE_PATH: Source/LambdaSharp.DynamoDB.Serialization/LambdaSharp.DynamoDB.Serialization.csproj
+            NUGET_KEY: ${{ secrets.NUGET_API_KEY }}
+
+      # Publish LambdaSharp.DynamoDB.Native
+      - name: Publish
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: brandedoutcast/publish-nuget@v2.5.5
+        with:
+            PROJECT_FILE_PATH: Source/LambdaSharp.DynamoDB.Native/LambdaSharp.DynamoDB.Native.csproj
+            NUGET_KEY: ${{ secrets.NUGET_API_KEY }}
