@@ -38,10 +38,27 @@ public static class DataModel {
     public const string ORDER_ITEM_GSI1_SK_PATTERN = "ITEM={1}";
 
     //--- Extension Methods ---
-    public static DynamoPrimaryKey<CustomerRecord> GetPrimaryKey(this CustomerRecord record) => CustomerRecordPrimaryKey(record.Username);
-    public static DynamoPrimaryKey<CustomerEmailRecord> GetPrimaryKey(this CustomerEmailRecord record) => CustomerEmailRecordPrimaryKey(record.EmailAddress);
-    public static DynamoPrimaryKey<OrderRecord> GetPrimaryKey(this OrderRecord record) => OrderRecordPrimaryKey(record.CustomerUsername, record.OrderId);
-    public static DynamoPrimaryKey<OrderItemRecord> GetPrimaryKey(this OrderItemRecord record) => OrderItemRecordPrimaryKey(record.OrderId, record.ItemId);
+    public static DynamoPrimaryKey<CustomerRecord> GetPrimaryKey(this CustomerRecord record) {
+        ArgumentAssertException.Assert(record.Username is not null);
+        return CustomerRecordPrimaryKey(record.Username);
+    }
+
+    public static DynamoPrimaryKey<CustomerEmailRecord> GetPrimaryKey(this CustomerEmailRecord record) {
+        ArgumentAssertException.Assert(record.EmailAddress is not null);
+        return CustomerEmailRecordPrimaryKey(record.EmailAddress);
+    }
+
+    public static DynamoPrimaryKey<OrderRecord> GetPrimaryKey(this OrderRecord record) {
+        ArgumentAssertException.Assert(record.CustomerUsername is not null);
+        ArgumentAssertException.Assert(record.OrderId is not null);
+        return OrderRecordPrimaryKey(record.CustomerUsername, record.OrderId);
+    }
+
+    public static DynamoPrimaryKey<OrderItemRecord> GetPrimaryKey(this OrderItemRecord record) {
+        ArgumentAssertException.Assert(record.OrderId is not null);
+        ArgumentAssertException.Assert(record.ItemId is not null);
+        return OrderItemRecordPrimaryKey(record.OrderId, record.ItemId);
+    }
 
     //--- Class Methods ---
     public static DynamoPrimaryKey<CustomerRecord> CustomerRecordPrimaryKey(string username) => new DynamoPrimaryKey<CustomerRecord>(CUSTOMER_PK_PATTERN, CUSTOMER_SK_PATTERN, username);
