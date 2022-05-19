@@ -1,0 +1,21 @@
+# Visual Studio Code
+.vscode
+debug.log
+
+# .NET Core
+bin
+obj
+
+# LambdaSharpTool
+cloudformation.json
+*-*.zip
+
+# Nuget packages
+*.nupkg
+
+# Misc
+.sandbox
+params.yml
+appsettings.Development.json
+src/CloudFormationResourceSpecification.json
+tmp/
