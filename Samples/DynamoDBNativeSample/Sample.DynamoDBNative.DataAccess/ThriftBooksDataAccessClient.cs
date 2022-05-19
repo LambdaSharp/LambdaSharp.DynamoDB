@@ -30,7 +30,7 @@ public class ThriftBooksDataAccessClient : IThriftBooksDataAccess {
     };
 
     //--- Constructors ---
-    public ThriftBooksDataAccessClient(string tableName, IAmazonDynamoDB dynamoClient = null)
+    public ThriftBooksDataAccessClient(string tableName, IAmazonDynamoDB? dynamoClient = null)
         => Table = new DynamoTable(tableName, dynamoClient, TableOptions);
 
     //--- Properties ---
@@ -64,7 +64,7 @@ public class ThriftBooksDataAccessClient : IThriftBooksDataAccess {
 
     public Task AddOrUpdateAddressAsync(string customerUsername, AddressRecord address, CancellationToken cancellationToken) {
         return Table.UpdateItem(DataModel.CustomerRecordPrimaryKey(customerUsername))
-            .Set(record => record.Addresses[address.Label], address)
+            .Set(record => record.Addresses![address.Label!], address)
             .ExecuteAsync(cancellationToken);
     }
 
@@ -116,6 +116,9 @@ public class ThriftBooksDataAccessClient : IThriftBooksDataAccess {
             .Get(record => record.CustomerUsername)
             .ExecuteAsync(cancellationToken)
         ).FirstOrDefault();
+        ArgumentAssertException.Assert(order is not null);
+        ArgumentAssertException.Assert(order.CustomerUsername is not null);
+        ArgumentAssertException.Assert(order.OrderId is not null);
 
         // update order with state
         await Table.UpdateItem(DataModel.OrderRecordPrimaryKey(order.CustomerUsername, order.OrderId))

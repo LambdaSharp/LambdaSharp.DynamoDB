@@ -12,8 +12,7 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
 
     <PackageId>LambdaSharp.DynamoDB.Serialization</PackageId>
-    <VersionPrefix>$(LAMBDASHARP_VERSION_PREFIX)</VersionPrefix>
-    <VersionSuffix>$(LAMBDASHARP_VERSION_SUFFIX)</VersionSuffix>
+    <Version>1.0</Version>
     <Title>LambdaSharp (λ#) DynamoDB Serialization</Title>
     <Description>Serverless .NET for AWS - DynamoDB Serialization Library</Description>
     <Company>LambdaSharp</Company>

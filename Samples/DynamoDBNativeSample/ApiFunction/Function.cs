@@ -77,11 +77,14 @@ namespace Sample.DynamoDBNative.ApiFunction {
         }
 
         public async Task<SaveOrderResponse> SaveOrderAsync(SaveOrderRequest request) {
+            ArgumentAssertException.Assert(request.Order is not null);
+            ArgumentAssertException.Assert(request.Items is not null);
             await DataAccessClient.SaveOrderAsync(request.Order, request.Items);
             return new SaveOrderResponse();
         }
 
         public async Task<UpdateOrderResponse> UpdateOrderAsync(UpdateOrderRequest request) {
+            ArgumentAssertException.Assert(request.OrderId is not null);
             await DataAccessClient.UpdateOrderAsync(request.OrderId, request.Status);
             return new UpdateOrderResponse();
         }
