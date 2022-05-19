@@ -20,7 +20,7 @@
     <Authors>Bjorg</Authors>
 
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/LambdaSharp/LambdaSharpTool/</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/LambdaSharp/LambdaSharp.DynamoDB/</PackageProjectUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/LambdaSharp/DigitalAssets/master/LambdaSharp-64x64.png</PackageIconUrl>
     <PackageIcon>LambdaSharp-64x64.png</PackageIcon>
     <PackageTags>AWS;DynamoDB;Lambda;LambdaSharp;Serverless</PackageTags>
