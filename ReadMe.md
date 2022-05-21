@@ -6,7 +6,7 @@ _LambdaSharp.DynamoDB.Native_ uses LINQ expressions with a fluent interface to d
 
 To optimize simplicity, the `DynamoTable` makes a few design choices.
 1. `DynamoTable` is designed for single table access and does not support operations across multiple tables.
-1. `DynamoTable` assumes the primary key is made from a partition key and a sort key. Furthermore, the name of partition key is `PK` and the name of the sort key is `SK`.
+1. `DynamoTable` assumes the primary key is made from a partition key (`PK`) and a sort key (`SK`).
 
 These are intentional constraints of the `DynamoTable` implementation. If these constraints do not fit your use case, then `DynamoTable` may not be suitable for you.
 
@@ -26,34 +26,36 @@ Once the `DynamoTable` instance has been initialized, it is ready for use.
 
 Most DynamoDB operations use `DynamoPrimaryKey` to specify the item to act upon. The exception to this rule is the `Query` operation, which selects a collection of items.
 
-The `DynamoPrimaryKey` specifies the partition key and sort key of the item to act upon. The primary key is always a composite key and the names must be `PK` and `SK`, respectively.
+The `DynamoPrimaryKey` specifies the partition key and sort key of the item to act upon. The primary key is always a composite key and the names of the partition key and sort key must be `PK` and `SK`, respectively.
 
 ```csharp
 var primaryKey = new DynamoPrimaryKey<CustomerRecord>(pkValue, skValue);
 ```
 
 The generic type parameter in `DynamoPrimaryKey<TRecord>` serves two purposes:
-* It avoids accidental confusion between primary keys by having a stricter type.
+* It avoids accidental confusion between primary keys for different items by having a stricter type.
 * The generic type is used to determine the type of the record class to instantiate.
-
+    * TODO: is this true?
 
 ## GetItem Operation
 
-The `GetItemAsync()` is the simplest way to retrieve a DynamoDB item. It reads all the attributes and populates a record instance. If the item was not found, the method returns `null` instead.
+The `GetItemAsync()` is the simplest way to retrieve a DynamoDB item. It reads all the item attributes and populates an instance. If the item was not found, the method returns `null` instead.
 
 ```csharp
-var customer = await table.GetItemAsync(primaryKey, cancellationToken);
+var customer = await table.GetItemAsync(primaryKey);
 ```
 
-The `GetItem()` method enables retrieving only some properties of the record instead of all of them. Reducing the amount of data returned does not reduce the DynamoDB read consumption, but it does reduce the bandwidth required to retrieve the wanted data.
+The `GetItem()` method enables retrieving only some properties of the item instead of all of them.
 
-The following code only populates the `CustomerId` and `CustomerName` property.
+The following code only populates the `CustomerId` and `CustomerName` properties.
 ```csharp
 var partialRecord = await table.GetItem(primaryKey)
-    .Get(record => record.CustomerId)
-    .Get(record => record.CustomerName)
-    .ExecuteAsync(cancellationToken);
+    .Get(item => item.CustomerId)
+    .Get(item => item.CustomerName)
+    .ExecuteAsync();
 ```
+
+Reducing the amount of data returned does not reduce the DynamoDB read consumption, but it does reduce the bandwidth required to retrieve the wanted data.
 
 The `DynamoTable` instance analyzes the lambda expressions passed into the `Get()` method and determines from them the DynamoDB attributes to request. The lambda expression is typed using the generic parameter from `DynamoPrimaryKey<TRecord>`. The lambda expression can use `.` and index `[]` operations to specify inner attributes of maps and lists as well. This approach makes it both easy and safe to specify the wanted attributes.
 
@@ -71,7 +73,7 @@ var customer = new CustomerRecord {
     CustomerEmail = "john@example.org",
     Addresses = new Dictionary<string, CustomerAddress>()
 };
-var success = table.PutItemAsync(primaryKey, customer, cancellationToken)
+var success = table.PutItemAsync(primaryKey, customer)
 ```
 
 The `PutItem()` method allow specifying conditions and also returning the previously stored DynamoDB item.
@@ -86,10 +88,10 @@ var customer = new CustomerRecord {
     Addresses = new Dictionary<string, CustomerAddress>()
 };
 var previousCustomer = table.PutItem(primaryKey, customer)
-    .ExecuteReturnOldItemAsync(cancellationToken)
+    .ExecuteReturnOldItemAsync()
 ```
 
-Use `WithCondition()` to specify a condition before performing the _PutItem_ operation. The following code checks that the DynamoDB item does not exist.
+Use `WithConditionItemDoesNotExist()` to specify a condition before performing the _PutItem_ operation. The following code checks that the DynamoDB item does not exist.
 
 ```csharp
 var customer = new CustomerRecord {
@@ -99,15 +101,13 @@ var customer = new CustomerRecord {
     Addresses = new Dictionary<string, CustomerAddress>()
 };
 var success = table.PutItem(primaryKey, customer)
-    .WithCondition(record => DynamoCondition.Exists(record))
-    .ExecuteAsync(cancellationToken)
+    .WithConditionItemDoesNotExist()
+    .ExecuteAsync()
 ```
-
-The `DynamoCondition` static class contains static methods representing native DynamoDB condition functions and operators. These methods are only used to analyze the lambda expressions in the `WithCondition()` method. When used directly, the methods throw an `InvalidOperationException`.
 
 See [Comparison Operator and Function Reference](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Expressions.OperatorsAndFunctions.html) for a complete list of condition expressions.
 
-Sometimes, it is necessary to store additional attributes alongside a record. For example, attributes used by either local or global secondary indices. This is possible by using the `Set()` method.
+Sometimes, it is necessary to store additional attributes alongside an item. For example, attributes used by either local or global secondary indices. This is possible by using the `Set()` method.
 
 ```csharp
 var customer = new CustomerRecord {
@@ -118,10 +118,10 @@ var customer = new CustomerRecord {
 };
 var success = table.PutItem(primaryKey, customer)
 
-    // allow retrieving customer record using the email address via the global secondary index GSI1
-    .Set("GSI1PK", $"EMAIL={record.CustomerEmail}")
+    // allow retrieving customer item using the email address via the global secondary index GSI1
+    .Set("GSI1PK", $"EMAIL={customer.CustomerEmail}")
     .Set("GSI1SK", "INFO")
-    .ExecuteAsync(cancellationToken)
+    .ExecuteAsync()
 ```
 
 
@@ -130,7 +130,7 @@ var success = table.PutItem(primaryKey, customer)
 The `DeleteItemAsync()` method is used to delete a DynamoDB item. The operation is idempotent and succeeds regardless if the item exists or not.
 
 ```csharp
-var success = await table.DeleteItemAsync(primaryKey, cancellationToken);
+var success = await table.DeleteItemAsync(primaryKey);
 ```
 
 The `DeleteItem()` method has similar capabilities as the `PutItem()` method and allows specifying a condition for the operation and returning the previously stored DynamoDB item.
@@ -139,15 +139,15 @@ Use the `ExecuteReturnOldItemAsync()` to retrieve the DynamoDB item attributes t
 
 ```csharp
 var previousCustomer = table.DeleteItem(primaryKey)
-    .ExecuteReturnOldItemAsync(cancellationToken)
+    .ExecuteReturnOldItemAsync()
 ```
 
 Use `WithCondition()` to specify a condition before performing the _DeleteItem_ operation. The following code checks the state of the DynamoDB item before deleting it.
 
 ```csharp
 var success = table.DeleteItem(primaryKey)
-    .WithCondition(record => record.Status == CustomerStatus.Deactivated)
-    .ExecuteAsync(cancellationToken)
+    .WithCondition(item => item.Status == CustomerStatus.Deactivated)
+    .ExecuteAsync()
 ```
 
 The `DynamoCondition` static class contains static methods representing native DynamoDB condition functions and operators. These methods are only used to analyze the lambda expressions in the `WithCondition()` method. When used directly, the methods throw an `InvalidOperationException`.
@@ -170,45 +170,43 @@ Use the `ExecuteReturnOldItemAsync()` to retrieve the DynamoDB item attributes b
 
 ```csharp
 var previousCustomer = table.UpdateItem(primaryKey)
-    .Set(record => record.CustomerName, "John Doe")
-    .ExecuteReturnOldItemAsync(cancellationToken)
+    .Set(item => item.CustomerName, "John Doe")
+    .ExecuteReturnOldItemAsync()
 ```
 
-Use the `ExecuteReturnNewItemAsync()` to retrieve the DynamoDB item attributes after they were updated. The method returns `null` if the DynamoDB item doesn't exist or the operation could not be performed.
+Use the `ExecuteReturnNewItemAsync()` to retrieve the DynamoDB item attributes after they were updated. The method returns `null` if the operation could not be performed.
 
 ```csharp
 var updatedCustomer = table.UpdateItem(primaryKey)
-    .Set(record => record.CustomerName, "John Doe")
-    .ExecuteReturnNewItemAsync(cancellationToken)
+    .Set(item => item.CustomerName, "John Doe")
+    .ExecuteReturnNewItemAsync()
 ```
 
-Use `WithCondition()` to specify a condition before performing the _UpdateItem_ operation. The following code checks that the DynamoDB item exists.
+Use `WithConditionItemExists()` to specify a condition before performing the _UpdateItem_ operation. The following code checks that the DynamoDB item exists.
 
 ```csharp
 var success = table.UpdateItem(primaryKey)
-    .WithCondition(record => DynamoCondition.Exists(record))
-    .Set(record => record.PendingOrders, record => record.PendingOrders + 1)
-    .ExecuteAsync(cancellationToken)
+    .WithConditionItemExists()
+    .Set(item => item.PendingOrders, item => item.PendingOrders + 1)
+    .ExecuteAsync()
 ```
-
-The `DynamoCondition` static class contains static methods representing native DynamoDB condition functions and operators. These methods are only used to analyze the lambda expressions in the `WithCondition()` method. When used directly, the methods throw an `InvalidOperationException`.
 
 See [Comparison Operator and Function Reference](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Expressions.OperatorsAndFunctions.html) for a complete list of condition expressions.
 
 Some of the `Set()` methods take a lambda expression as their second argument to compute a new value based on an existing DynamoDB item attribute. Although, this capability is extremely powerful, the kind of operations that can be performed is very limited. See [SET—Modifying or Adding Item Attributes](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Expressions.UpdateExpressions.html#Expressions.UpdateExpressions.DELETE) for a list of allowed operations and functions. The `DynamoUpdate` static class contains static methods representing native DynamoDB update functions. These methods are only used to analyze the lambda expressions in the `Set()` method. When used directly, the methods throw an `InvalidOperationException`.
 
-Sometimes, it is necessary to store additional attributes alongside a record. For example, attributes used by either local or global secondary indices. This is possible by using the `Set()` method.
+Sometimes, it is necessary to store additional attributes alongside an item. For example, attributes used by either local or global secondary indices. This is possible by using the `Set()` method.
 
 ```csharp
 var success = table.UpdateItem(primaryKey)
-    .WithCondition(record => DynamoCondition.Exists(record))
+    .WithConditionItemExists()
 
     // update customer email
-    .Set(record => record.CustomerEmail, "john@example.org")
+    .Set(item => item.CustomerEmail, "john@example.org")
 
-    // also update global secondary index GSI1 to allow retrieving customer record using the email address
+    // also update global secondary index GSI1 to allow retrieving customer item using the email address
     .Set("GSI1PK", "EMAIL=john@example.org")
-    .ExecuteAsync(cancellationToken)
+    .ExecuteAsync()
 ```
 
 ## Query Operation
@@ -237,14 +235,20 @@ var clause = DynamoQuery.FromIndex("GSI1")
 
 The `Query()` method can specify an operation that returns a list of DynamoDB items that all have the same type or they can be mixed. For the latter case, the `WithTypeFilter<TRecord>()` method is used to specify what types to deserialize. Items returned by the DynamoDB _Query_ operation that do not match the type filter are discarded.
 
-The results of the DynamoDB _Query_ operation can either be retrieved as a complete list using `ExecuteAsync()` or streamed incrementally using `ExecuteAsyncEnumerable()`.
+The results of the DynamoDB _Query_ operation can either be retrieved as a complete list using `ExecuteAsync()` or streamed incrementally using `ExecuteAsyncEnumerable()`. This example also shows how to use a cancellation token to cancel the operation.
 
+_Using ExecuteAsync():_
 ```csharp
 // receive all items at once
-var list = await table.Query(clause, limit: 100).ExecuteAsync(cancellationToken);
+var list = await table.Query(clause, limit: 100)
+    .ExecuteAsync(cancellationToken);
+```
 
+_Using ExecuteAsyncEnumerable():_
+```csharp
 // receive items as they come in
-var asyncEnumerable = table.Query(clause, limit: 100).ExecuteAsyncEnumerable(cancellationToken);
+var asyncEnumerable = table.Query(clause, limit: 100)
+    .ExecuteAsyncEnumerable(cancellationToken);
 await foreach(var item in asyncEnumerable.WithCancellation(cancellationToken)) {
 
     // process item incrementally
