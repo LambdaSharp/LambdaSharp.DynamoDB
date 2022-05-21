@@ -40,12 +40,12 @@ namespace LambdaSharp.DynamoDB.Native.Operations {
         /// <summary>
         /// Add condition that item exists for DeleteItem operation.
         /// </summary>
-        IDynamoTableDeleteItem<TRecord> WithConditionExists() => WithCondition(record => DynamoCondition.Exists(record));
+        IDynamoTableDeleteItem<TRecord> WithConditionItemExists() => WithCondition(record => DynamoCondition.Exists(record));
 
         /// <summary>
         /// Add condition that item does not exist for DeleteItem operation.
         /// </summary>
-        IDynamoTableDeleteItem<TRecord> WithConditionDoesNotExist() => WithCondition(record => DynamoCondition.DoesNotExist(record));
+        IDynamoTableDeleteItem<TRecord> WithConditionItemDoesNotExist() => WithCondition(record => DynamoCondition.DoesNotExist(record));
 
         /// <summary>
         /// Execute the DeleteItem operation.

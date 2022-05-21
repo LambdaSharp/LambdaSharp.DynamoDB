@@ -42,12 +42,12 @@ namespace LambdaSharp.DynamoDB.Native.Operations {
         /// <summary>
         /// Add condition that item exists for UpdateItem operation.
         /// </summary>
-        IDynamoTableUpdateItem<TRecord> WithConditionExists() => WithCondition(record => DynamoCondition.Exists(record));
+        IDynamoTableUpdateItem<TRecord> WithConditionItemExists() => WithCondition(record => DynamoCondition.Exists(record));
 
         /// <summary>
         /// Add condition that item does not exist for UpdateItem operation.
         /// </summary>
-        IDynamoTableUpdateItem<TRecord> WithConditionDoesNotExist() => WithCondition(record => DynamoCondition.DoesNotExist(record));
+        IDynamoTableUpdateItem<TRecord> WithConditionItemDoesNotExist() => WithCondition(record => DynamoCondition.DoesNotExist(record));
 
         // *** `SET Foo.Bar = :value` action ***
 

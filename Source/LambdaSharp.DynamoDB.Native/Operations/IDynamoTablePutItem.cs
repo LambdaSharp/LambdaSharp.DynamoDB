@@ -41,12 +41,12 @@ namespace LambdaSharp.DynamoDB.Native.Operations {
         /// <summary>
         /// Add condition that item exists for PutItem operation.
         /// </summary>
-        IDynamoTablePutItem<TRecord> WithConditionExists() => WithCondition(record => DynamoCondition.Exists(record));
+        IDynamoTablePutItem<TRecord> WithConditionItemExists() => WithCondition(record => DynamoCondition.Exists(record));
 
         /// <summary>
         /// Add condition that item does not exist for PutItem operation.
         /// </summary>
-        IDynamoTablePutItem<TRecord> WithConditionDoesNotExist() => WithCondition(record => DynamoCondition.DoesNotExist(record));
+        IDynamoTablePutItem<TRecord> WithConditionItemDoesNotExist() => WithCondition(record => DynamoCondition.DoesNotExist(record));
 
         /// <summary>
         /// Set the value of a DynamoDB item attribute. Used for storing attributes used by local/global secondary indices.
