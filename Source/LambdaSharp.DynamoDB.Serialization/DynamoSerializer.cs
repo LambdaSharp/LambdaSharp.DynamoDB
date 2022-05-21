@@ -98,7 +98,7 @@ namespace LambdaSharp.DynamoDB.Serialization {
                 };
             }
 
-            // find a suiteable converter for the provided type
+            // find a suitable converter for the provided type
             var typeToConvert = value.GetType();
             var converter = options.GetConverters().FirstOrDefault(converter => converter.CanConvert(typeToConvert));
             if(converter is null) {
