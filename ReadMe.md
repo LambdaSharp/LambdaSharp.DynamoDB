@@ -2,7 +2,7 @@
 
 [Amazon DynamoDB](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Introduction.html) is an advanced, serverless key-value store that is fast and scales well, but that suffers from a complex API design. To learn more about DynamoDB, visit the [Amazon DynamoDB](https://aws.amazon.com/dynamodb/) webpage or buy the excellent ["The DynamoDB Book" by Alex DeBrie](https://www.dynamodbbook.com/) for in-depth coverage with samples.
 
-_LambdaSharp.DynamoDB.Native_ uses LINQ expression with a fluent interface which drastically simplifies using advanced DynamoDB features in applications.
+_LambdaSharp.DynamoDB.Native_ uses LINQ expressions with a fluent interface to drastically simplify access to advanced DynamoDB features.
 
 To optimize simplicity, the `DynamoTable` makes a few design choices.
 1. `DynamoTable` is designed for single table access and does not support operations across multiple tables.
