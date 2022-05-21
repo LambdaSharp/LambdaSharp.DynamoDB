@@ -38,6 +38,16 @@ namespace LambdaSharp.DynamoDB.Native.Operations {
         IDynamoTableDeleteItem<TRecord> WithCondition(Expression<Func<TRecord, bool>> condition);
 
         /// <summary>
+        /// Add condition that item exists for DeleteItem operation.
+        /// </summary>
+        IDynamoTableDeleteItem<TRecord> WithConditionExists() => WithCondition(record => DynamoCondition.Exists(record));
+
+        /// <summary>
+        /// Add condition that item does not exist for DeleteItem operation.
+        /// </summary>
+        IDynamoTableDeleteItem<TRecord> WithConditionDoesNotExist() => WithCondition(record => DynamoCondition.DoesNotExist(record));
+
+        /// <summary>
         /// Execute the DeleteItem operation.
         /// </summary>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>

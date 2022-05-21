@@ -109,6 +109,16 @@ namespace LambdaSharp.DynamoDB.Native.Operations {
         IDynamoTableTransactWriteItemsPutItem<TRecord> WithCondition(Expression<Func<TRecord, bool>> condition);
 
         /// <summary>
+        /// Add condition that item exists for PutItem operation.
+        /// </summary>
+        IDynamoTableTransactWriteItemsPutItem<TRecord> WithConditionExists() => WithCondition(record => DynamoCondition.Exists(record));
+
+        /// <summary>
+        /// Add condition that item does not exist for PutItem operation.
+        /// </summary>
+        IDynamoTableTransactWriteItemsPutItem<TRecord> WithConditionDoesNotExist() => WithCondition(record => DynamoCondition.DoesNotExist(record));
+
+        /// <summary>
         /// Set the value of a DynamoDB item attribute. Used for storing attributes used by local/global secondary indices.
         /// </summary>
         /// <param name="key">Name of attribute.</param>
@@ -134,6 +144,16 @@ namespace LambdaSharp.DynamoDB.Native.Operations {
         /// </summary>
         /// <param name="condition">A lambda predicate representing the DynamoDB condition expression.</param>
         IDynamoTableTransactWriteItemsUpdateItem<TRecord> WithCondition(Expression<Func<TRecord, bool>> condition);
+
+        /// <summary>
+        /// Add condition that item exists for UpdateItem operation.
+        /// </summary>
+        IDynamoTableTransactWriteItemsUpdateItem<TRecord> WithConditionExists() => WithCondition(record => DynamoCondition.Exists(record));
+
+        /// <summary>
+        /// Add condition that item does not exist for UpdateItem operation.
+        /// </summary>
+        IDynamoTableTransactWriteItemsUpdateItem<TRecord> WithConditionDoesNotExist() => WithCondition(record => DynamoCondition.DoesNotExist(record));
 
         /// <summary>
         /// End specification of the UpdateItem operation for TransactWriteItems.
@@ -370,6 +390,16 @@ namespace LambdaSharp.DynamoDB.Native.Operations {
         IDynamoTableTransactWriteItemsDeleteItem<TRecord> WithCondition(Expression<Func<TRecord, bool>> condition);
 
         /// <summary>
+        /// Add condition that item exists for DeleteItem operation.
+        /// </summary>
+        IDynamoTableTransactWriteItemsDeleteItem<TRecord> WithConditionExists() => WithCondition(record => DynamoCondition.Exists(record));
+
+        /// <summary>
+        /// Add condition that item does not exist for DeleteItem operation.
+        /// </summary>
+        IDynamoTableTransactWriteItemsDeleteItem<TRecord> WithConditionDoesNotExist() => WithCondition(record => DynamoCondition.DoesNotExist(record));
+
+        /// <summary>
         /// End specification of the DeleteItem operation for TransactWriteItems.
         /// </summary>
         IDynamoTableTransactWriteItems End();
@@ -388,6 +418,16 @@ namespace LambdaSharp.DynamoDB.Native.Operations {
         /// </summary>
         /// <param name="condition">A lambda predicate representing the DynamoDB condition expression.</param>
         IDynamoTableTransactWriteItemsConditionCheck<TRecord> WithCondition(Expression<Func<TRecord, bool>> condition);
+
+        /// <summary>
+        /// Add condition that item exists for ConditionCheck operation.
+        /// </summary>
+        IDynamoTableTransactWriteItemsConditionCheck<TRecord> WithConditionExists() => WithCondition(record => DynamoCondition.Exists(record));
+
+        /// <summary>
+        /// Add condition that item does not exist for ConditionCheck operation.
+        /// </summary>
+        IDynamoTableTransactWriteItemsConditionCheck<TRecord> WithConditionDoesNotExist() => WithCondition(record => DynamoCondition.DoesNotExist(record));
 
         /// <summary>
         /// End specification of the ConditionCheck operation for TransactWriteItems.
