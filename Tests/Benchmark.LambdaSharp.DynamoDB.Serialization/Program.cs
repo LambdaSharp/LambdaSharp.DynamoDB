@@ -17,6 +17,7 @@
  */
 
 using System.Text;
+using Benchmark.LambdaSharp.DynamoDB.Serialization.Internal;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Running;
 using LambdaSharp.DynamoDB.Serialization;
@@ -25,11 +26,23 @@ var summary = BenchmarkRunner.Run<DynamoSerialization>();
 
 public class DynamoSerialization {
 
-    private object? value;
+    //--- Types ---
+    public class MyCustomType {
 
-    [GlobalSetup]
-    public void GlobalSetup() {
-        value = new {
+        //--- Properties ---
+
+        [DynamoPropertyIgnore]
+        public string? IgnoreText { get; set; }
+
+        [DynamoPropertyName("OtherName")]
+        public string? CustomName { get; set; }
+    }
+
+    //--- Methods ---
+
+    [Benchmark(OperationsPerInvoke = 10_000)]
+    public void Serialize_anonymous_class() {
+        var value = new {
             Active = true,
             Binary = Encoding.UTF8.GetBytes("Bye"),
             Name = "John Doe",
@@ -47,10 +60,113 @@ public class DynamoSerialization {
             NumberSet = new[] { 123, 456 }.ToHashSet(),
             BinarySet = new[] { Encoding.UTF8.GetBytes("Good"), Encoding.UTF8.GetBytes("Day") }.ToHashSet()
         };
+        for(var i = 0; i < 10_000; ++i) {
+            DynamoSerializer.Serialize(value);
+        }
     }
 
     [Benchmark(OperationsPerInvoke = 10_000)]
-    public void Serialize_anonymous_class() {
+    public void Serialize_with_custom_converter() {
+
+        // arrange
+        var value = new {
+            TimeSpan = TimeSpan.FromSeconds(789)
+        };
+        var options = new DynamoSerializerOptions {
+            Converters = {
+                new DynamoTimeSpanConverter()
+            }
+        };
+        for(var i = 0; i < 10_000; ++i) {
+            DynamoSerializer.Serialize(value, options);
+        }
+    }
+
+    [Benchmark(OperationsPerInvoke = 10_000)]
+    public void Serialize_empty_string() {
+        var value = new {
+            Text = ""
+        };
+        for(var i = 0; i < 10_000; ++i) {
+            DynamoSerializer.Serialize(value);
+        }
+    }
+
+    [Benchmark(OperationsPerInvoke = 10_000)]
+    public void Serialize_empty_string_set() {
+        var value = new {
+            StringSet = new HashSet<string>()
+        };
+        for(var i = 0; i < 10_000; ++i) {
+            DynamoSerializer.Serialize(value);
+        }
+    }
+
+    [Benchmark(OperationsPerInvoke = 10_000)]
+    public void Serialize_empty_int_set() {
+        var value = new {
+            IntSet = new HashSet<int>()
+        };
+        for(var i = 0; i < 10_000; ++i) {
+            DynamoSerializer.Serialize(value);
+        }
+    }
+
+    [Benchmark(OperationsPerInvoke = 10_000)]
+    public void Serialize_empty_long_set() {
+        var value = new {
+            LongSet = new HashSet<long>()
+        };
+        for(var i = 0; i < 10_000; ++i) {
+            DynamoSerializer.Serialize(value);
+        }
+    }
+
+    [Benchmark(OperationsPerInvoke = 10_000)]
+    public void Serialize_empty_double_set() {
+        var value = new {
+            DoubleSet = new HashSet<double>()
+        };
+        for(var i = 0; i < 10_000; ++i) {
+            DynamoSerializer.Serialize(value);
+        }
+    }
+
+    [Benchmark(OperationsPerInvoke = 10_000)]
+    public void Serialize_empty_decimal_set() {
+        var value = new {
+            DecimalSet = new HashSet<decimal>()
+        };
+        for(var i = 0; i < 10_000; ++i) {
+            DynamoSerializer.Serialize(value);
+        }
+    }
+
+    [Benchmark(OperationsPerInvoke = 10_000)]
+    public void Serialize_empty_binary_set() {
+        var value = new {
+            BinarySet = new HashSet<byte[]>()
+        };
+        for(var i = 0; i < 10_000; ++i) {
+            DynamoSerializer.Serialize(value);
+        }
+    }
+
+    [Benchmark(OperationsPerInvoke = 10_000)]
+    public void Serialize_custom_name_property() {
+        var value = new MyCustomType {
+            CustomName = "Hello"
+        };
+        for(var i = 0; i < 10_000; ++i) {
+            DynamoSerializer.Serialize(value);
+        }
+    }
+
+    [Benchmark(OperationsPerInvoke = 10_000)]
+    public void Serialize_ignore_property() {
+        var value = new MyCustomType {
+            IgnoreText = "World"
+        };
         for(var i = 0; i < 10_000; ++i) {
             DynamoSerializer.Serialize(value);
         }
