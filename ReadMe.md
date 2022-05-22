@@ -32,10 +32,10 @@ The `DynamoPrimaryKey` specifies the partition key and sort key of the item to a
 var primaryKey = new DynamoPrimaryKey<CustomerRecord>(pkValue, skValue);
 ```
 
-The generic type parameter in `DynamoPrimaryKey<TRecord>` serves two purposes:
+The generic type parameter in `DynamoPrimaryKey<TItem>` serves two purposes:
 * It avoids accidental confusion between primary keys for different items by having a stricter type.
-* The generic type is used to determine the type of the record class to instantiate.
-    * TODO: is this true?
+* The generic type is used to determine the type of the item to instantiate.
+
 
 ## GetItem Operation
 
@@ -49,7 +49,7 @@ The `GetItem()` method enables retrieving only some properties of the item inste
 
 The following code only populates the `CustomerId` and `CustomerName` properties.
 ```csharp
-var partialRecord = await table.GetItem(primaryKey)
+var partialItem = await table.GetItem(primaryKey)
     .Get(item => item.CustomerId)
     .Get(item => item.CustomerName)
     .ExecuteAsync();
@@ -57,7 +57,7 @@ var partialRecord = await table.GetItem(primaryKey)
 
 Reducing the amount of data returned does not reduce the DynamoDB read consumption, but it does reduce the bandwidth required to retrieve the wanted data.
 
-The `DynamoTable` instance analyzes the lambda expressions passed into the `Get()` method and determines from them the DynamoDB attributes to request. The lambda expression is typed using the generic parameter from `DynamoPrimaryKey<TRecord>`. The lambda expression can use `.` and index `[]` operations to specify inner attributes of maps and lists as well. This approach makes it both easy and safe to specify the wanted attributes.
+The `DynamoTable` instance analyzes the lambda expressions passed into the `Get()` method and determines from them the DynamoDB attributes to request. The lambda expression is typed using the generic parameter from `DynamoPrimaryKey<TItem>`. The lambda expression can use `.` and index `[]` operations to specify inner attributes of maps and lists as well. This approach makes it both easy and safe to specify the wanted attributes.
 
 A `NotSupportedException` is thrown when the lambda expression is not valid for specifying a DynamoDB attribute.
 
@@ -233,7 +233,7 @@ var clause = DynamoQuery.FromIndex("GSI1")
     .WhereSKBeginsWith("WS=");
 ```
 
-The `Query()` method can specify an operation that returns a list of DynamoDB items that all have the same type or they can be mixed. For the latter case, the `WithTypeFilter<TRecord>()` method is used to specify what types to deserialize. Items returned by the DynamoDB _Query_ operation that do not match the type filter are discarded.
+The `Query()` method can specify an operation that returns a list of DynamoDB items that all have the same type or they can be mixed. For the latter case, the `WithTypeFilter<TItem>()` method is used to specify what types to deserialize. Items returned by the DynamoDB _Query_ operation that do not match the type filter are discarded.
 
 The results of the DynamoDB _Query_ operation can either be retrieved as a complete list using `ExecuteAsync()` or streamed incrementally using `ExecuteAsyncEnumerable()`. This example also shows how to use a cancellation token to cancel the operation.
 
