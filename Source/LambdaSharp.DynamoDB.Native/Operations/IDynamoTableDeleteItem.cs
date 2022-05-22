@@ -26,8 +26,8 @@ namespace LambdaSharp.DynamoDB.Native.Operations {
     /// <summary>
     /// Interface to specify a DeleteItem operation.
     /// </summary>
-    /// <typeparam name="TRecord">The record type.</typeparam>
-    public interface IDynamoTableDeleteItem<TRecord> where TRecord : class {
+    /// <typeparam name="TItem">The item type.</typeparam>
+    public interface IDynamoTableDeleteItem<TItem> where TItem : class {
 
         //--- Methods ---
 
@@ -35,17 +35,17 @@ namespace LambdaSharp.DynamoDB.Native.Operations {
         /// Add condition for DeleteItem operation.
         /// </summary>
         /// <param name="condition">A lambda predicate representing the DynamoDB condition expression.</param>
-        IDynamoTableDeleteItem<TRecord> WithCondition(Expression<Func<TRecord, bool>> condition);
+        IDynamoTableDeleteItem<TItem> WithCondition(Expression<Func<TItem, bool>> condition);
 
         /// <summary>
         /// Add condition that item exists for DeleteItem operation.
         /// </summary>
-        IDynamoTableDeleteItem<TRecord> WithConditionItemExists() => WithCondition(record => DynamoCondition.Exists(record));
+        IDynamoTableDeleteItem<TItem> WithConditionItemExists() => WithCondition(item => DynamoCondition.Exists(item));
 
         /// <summary>
         /// Add condition that item does not exist for DeleteItem operation.
         /// </summary>
-        IDynamoTableDeleteItem<TRecord> WithConditionItemDoesNotExist() => WithCondition(record => DynamoCondition.DoesNotExist(record));
+        IDynamoTableDeleteItem<TItem> WithConditionItemDoesNotExist() => WithCondition(item => DynamoCondition.DoesNotExist(item));
 
         /// <summary>
         /// Execute the DeleteItem operation.
@@ -58,7 +58,7 @@ namespace LambdaSharp.DynamoDB.Native.Operations {
         /// Execute the DeleteItem operation.
         /// </summary>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>Old record when found and condition is met. <c>null</c>, otherwise.</returns>
-        Task<TRecord?> ExecuteReturnOldItemAsync(CancellationToken cancellationToken = default);
+        /// <returns>Old item when found and condition is met. <c>null</c>, otherwise.</returns>
+        Task<TItem?> ExecuteReturnOldItemAsync(CancellationToken cancellationToken = default);
     }
 }

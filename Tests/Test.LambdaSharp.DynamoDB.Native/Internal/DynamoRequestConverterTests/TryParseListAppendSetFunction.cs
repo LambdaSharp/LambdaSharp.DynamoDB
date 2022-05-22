@@ -49,7 +49,7 @@ namespace Test.LambdaSharp.DynamoDB.Internal.DynamoRequestConverterTests {
             var converter = new DynamoRequestConverter(new(), new(), new());
 
             // act
-            var expression = LambdaBody(record => DynamoUpdate.ListAppend(record.List, new List<string>()));
+            var expression = LambdaBody(item => DynamoUpdate.ListAppend(item.List, new List<string>()));
             var success = converter.TryParseListAppendSetFunction(expression, out var output);
 
             // assert

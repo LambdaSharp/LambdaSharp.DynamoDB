@@ -48,7 +48,7 @@ namespace Test.LambdaSharp.DynamoDB.Internal.DynamoRequestConverterTests {
             var converter = new DynamoRequestConverter(new(), new(), new());
 
             // act
-            var expression = LambdaBody(record => 42);
+            var expression = LambdaBody(item => 42);
             var success = converter.TryParseValue(expression, out var output, out var precedence);
 
             // assert
@@ -68,7 +68,7 @@ namespace Test.LambdaSharp.DynamoDB.Internal.DynamoRequestConverterTests {
 
             // act
             var closure = 42;
-            var expression = LambdaBody(record => closure);
+            var expression = LambdaBody(item => closure);
             var success = converter.TryParseValue(expression, out var output, out var precedence);
 
             // assert
@@ -87,7 +87,7 @@ namespace Test.LambdaSharp.DynamoDB.Internal.DynamoRequestConverterTests {
             var converter = new DynamoRequestConverter(new(), new(), new());
 
             // act
-            var expression = LambdaBody(record => record.Nested.Age + 42);
+            var expression = LambdaBody(item => item.Nested.Age + 42);
             var success = converter.TryParseValue(expression, out var output, out var precedence);
 
             // assert
@@ -105,7 +105,7 @@ namespace Test.LambdaSharp.DynamoDB.Internal.DynamoRequestConverterTests {
             var converter = new DynamoRequestConverter(new(), new(), new());
 
             // act
-            var expression = LambdaBody(record => record.Nested.Age - 42);
+            var expression = LambdaBody(item => item.Nested.Age - 42);
             var success = converter.TryParseValue(expression, out var output, out var precedence);
 
             // assert
@@ -124,7 +124,7 @@ namespace Test.LambdaSharp.DynamoDB.Internal.DynamoRequestConverterTests {
 
             // act
             var closure = 42;
-            var expression = LambdaBody(record => record.Nested.Age + closure);
+            var expression = LambdaBody(item => item.Nested.Age + closure);
             var success = converter.TryParseValue(expression, out var output, out var precedence);
 
             // assert
@@ -143,7 +143,7 @@ namespace Test.LambdaSharp.DynamoDB.Internal.DynamoRequestConverterTests {
 
             // act
             var closure = 42;
-            var expression = LambdaBody(record => record.Nested.Age - closure);
+            var expression = LambdaBody(item => item.Nested.Age - closure);
             var success = converter.TryParseValue(expression, out var output, out var precedence);
 
             // assert

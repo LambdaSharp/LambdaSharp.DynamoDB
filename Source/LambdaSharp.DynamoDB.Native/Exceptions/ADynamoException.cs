@@ -45,7 +45,7 @@ namespace LambdaSharp.DynamoDB.Native.Exceptions {
 
     /// <summary>
     /// The <see cref="DynamoTableBatchGetItemsMaxAttemptsExceededException"/> exception is throw when
-    /// <see cref="IDynamoTable.BatchGetItems{TRecord}(IEnumerable{DynamoPrimaryKey{TRecord}}, bool)"/>
+    /// <see cref="IDynamoTable.BatchGetItems{TItem}(IEnumerable{DynamoPrimaryKey{TItem}}, bool)"/>
     /// or <see cref="IDynamoTable.BatchGetItems(bool)"/> have reached they retry limit.
     /// </summary>
     public class DynamoTableBatchGetItemsMaxAttemptsExceededException : ADynamoException {

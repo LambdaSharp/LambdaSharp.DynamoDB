@@ -26,8 +26,8 @@ using LambdaSharp.DynamoDB.Native.Internal;
 
 namespace LambdaSharp.DynamoDB.Native.Operations.Internal {
 
-    internal sealed class DynamoTablePutItem<TRecord> : IDynamoTablePutItem<TRecord>
-        where TRecord : class
+    internal sealed class DynamoTablePutItem<TItem> : IDynamoTablePutItem<TItem>
+        where TItem : class
     {
 
         //--- Fields ---
@@ -43,12 +43,12 @@ namespace LambdaSharp.DynamoDB.Native.Operations.Internal {
         }
 
         //--- Methods ---
-        public IDynamoTablePutItem<TRecord> WithCondition(Expression<Func<TRecord, bool>> condition) {
+        public IDynamoTablePutItem<TItem> WithCondition(Expression<Func<TItem, bool>> condition) {
             _converter.AddCondition(condition.Body);
             return this;
         }
 
-        public IDynamoTablePutItem<TRecord> Set(string key, AttributeValue value) {
+        public IDynamoTablePutItem<TItem> Set(string key, AttributeValue value) {
             _request.Item[key] = value;
             return this;
         }
@@ -63,14 +63,14 @@ namespace LambdaSharp.DynamoDB.Native.Operations.Internal {
             }
         }
 
-        public async Task<TRecord?> ExecuteReturnOldItemAsync(CancellationToken cancellationToken) {
+        public async Task<TItem?> ExecuteReturnOldItemAsync(CancellationToken cancellationToken) {
             _request.ConditionExpression = _converter.ConvertConditions(_table.Options);
             _request.ReturnValues = ReturnValue.ALL_OLD;
             try {
                 var response = await _table.DynamoClient.PutItemAsync(_request);
-                return _table.DeserializeItem<TRecord>(response.Attributes);
+                return _table.DeserializeItem<TItem>(response.Attributes);
             } catch(ConditionalCheckFailedException) {
-                return default(TRecord);
+                return default(TItem);
             }
         }
     }

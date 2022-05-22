@@ -60,9 +60,9 @@ namespace Integration.LambdaSharp.DynamoDB.Native {
             public const string MY_OTHER_RECORD_SK_PATTERN = "OTHER-SUB-ID={1}";
 
             //--- Class Methods ---
-            public static DynamoPrimaryKey<MyRecord> GetPrimaryKey(MyRecord record) => MyRecordPrimaryKey(record.Id, record.SubId);
+            public static DynamoPrimaryKey<MyRecord> GetPrimaryKey(MyRecord item) => MyRecordPrimaryKey(item.Id, item.SubId);
             public static DynamoPrimaryKey<MyRecord> MyRecordPrimaryKey(string id, string subId) => new DynamoPrimaryKey<MyRecord>(MY_RECORD_PK_PATTERN, MY_RECORD_SK_PATTERN, id, subId);
-            public static DynamoPrimaryKey<MyOtherRecord> GetPrimaryKey(MyOtherRecord record) => MyOtherRecordPrimaryKey(record.Id, record.SubId);
+            public static DynamoPrimaryKey<MyOtherRecord> GetPrimaryKey(MyOtherRecord item) => MyOtherRecordPrimaryKey(item.Id, item.SubId);
             public static DynamoPrimaryKey<MyOtherRecord> MyOtherRecordPrimaryKey(string id, string subId) => new DynamoPrimaryKey<MyOtherRecord>(MY_OTHER_RECORD_PK_PATTERN, MY_OTHER_RECORD_SK_PATTERN, id, subId);
             public static IDynamoQueryClause<MyRecord> SelectMyRecords(string recordId)
                 => DynamoQuery.SelectPKFormat<MyRecord>(MY_RECORD_PK_PATTERN, recordId)
@@ -154,8 +154,8 @@ namespace Integration.LambdaSharp.DynamoDB.Native {
 
             // act
             var result = await Table.UpdateItem(order.GetPrimaryKey())
-                .WithCondition(record => record.Status == OrderStatus.Pending)
-                .Set(record => record.Status, OrderStatus.Shipped)
+                .WithCondition(item => item.Status == OrderStatus.Pending)
+                .Set(item => item.Status, OrderStatus.Shipped)
                 .ExecuteAsync();
 
             // assert
@@ -171,7 +171,7 @@ namespace Integration.LambdaSharp.DynamoDB.Native {
 
             // act
             var result = await Table.DeleteItem(customer.GetPrimaryKey())
-                .WithCondition(record => record.Name == customer.Name)
+                .WithCondition(item => item.Name == customer.Name)
                 .ExecuteAsync();
 
             // assert
@@ -187,7 +187,7 @@ namespace Integration.LambdaSharp.DynamoDB.Native {
 
             // act
             var result = await Table.DeleteItem(customer.GetPrimaryKey())
-                .WithCondition(record => record.Name == "Bob")
+                .WithCondition(item => item.Name == "Bob")
                 .ExecuteAsync();
 
             // assert
@@ -205,8 +205,8 @@ namespace Integration.LambdaSharp.DynamoDB.Native {
 
             // act
             var result = await Table.UpdateItem(order.GetPrimaryKey())
-                .WithCondition(record => record.Status == OrderStatus.Shipped)
-                .Set(record => record.Status, OrderStatus.Delivered)
+                .WithCondition(item => item.Status == OrderStatus.Shipped)
+                .Set(item => item.Status, OrderStatus.Delivered)
                 .ExecuteAsync();
 
             // assert
@@ -218,26 +218,26 @@ namespace Integration.LambdaSharp.DynamoDB.Native {
 
             // arrange
             var id = GetRandomString(10);
-            var record1 = new MyRecord {
+            var item1 = new MyRecord {
                 Id = id,
                 SubId = GetRandomString(10),
                 Value = "Hello"
             };
-            await Table.PutItemAsync(MyDataModel.GetPrimaryKey(record1), record1);
-            var record2 = new MyRecord {
+            await Table.PutItemAsync(MyDataModel.GetPrimaryKey(item1), item1);
+            var item2 = new MyRecord {
                 Id = id,
                 SubId = GetRandomString(10),
                 Value = "World"
             };
-            await Table.PutItemAsync(MyDataModel.GetPrimaryKey(record2), record2);
+            await Table.PutItemAsync(MyDataModel.GetPrimaryKey(item2), item2);
 
             // act
-            var result = await Table.Query(MyDataModel.SelectMyRecords(record1.Id), consistentRead: true).ExecuteAsync();
+            var result = await Table.Query(MyDataModel.SelectMyRecords(item1.Id), consistentRead: true).ExecuteAsync();
 
             // assert
             result.Should().HaveCount(2);
-            result.Should().ContainEquivalentOf(record1);
-            result.Should().ContainEquivalentOf(record2);
+            result.Should().ContainEquivalentOf(item1);
+            result.Should().ContainEquivalentOf(item2);
         }
 
         [Fact]
@@ -245,27 +245,27 @@ namespace Integration.LambdaSharp.DynamoDB.Native {
 
             // arrange
             var id = GetRandomString(10);
-            var record1 = new MyRecord {
+            var item1 = new MyRecord {
                 Id = id,
                 SubId = GetRandomString(10),
                 Value = "Hello"
             };
-            await Table.PutItemAsync(MyDataModel.GetPrimaryKey(record1), record1);
-            var record2 = new MyOtherRecord {
+            await Table.PutItemAsync(MyDataModel.GetPrimaryKey(item1), item1);
+            var item2 = new MyOtherRecord {
                 Id = id,
                 SubId = GetRandomString(10),
                 Name = "Bob"
             };
-            await Table.PutItemAsync(MyDataModel.GetPrimaryKey(record2), record2);
+            await Table.PutItemAsync(MyDataModel.GetPrimaryKey(item2), item2);
 
             // act
-            var result = await Table.Query(MyDataModel.SelectMyRecordsAndMyOtherRecords(record1.Id), consistentRead: true)
+            var result = await Table.Query(MyDataModel.SelectMyRecordsAndMyOtherRecords(item1.Id), consistentRead: true)
                 .ExecuteAsync();
 
             // assert
             result.Should().HaveCount(2);
-            result.Should().ContainEquivalentOf(record1);
-            result.Should().ContainEquivalentOf(record2);
+            result.Should().ContainEquivalentOf(item1);
+            result.Should().ContainEquivalentOf(item2);
         }
 
         [Fact]
@@ -344,17 +344,17 @@ namespace Integration.LambdaSharp.DynamoDB.Native {
             // act
             var result = await Table.BatchGetItems()
                 .BeginGetItem(customer.GetPrimaryKey())
-                    .Get(record => record.Username)
+                    .Get(item => item.Username)
                 .End()
                 .BeginGetItem(order.GetPrimaryKey())
-                    .Get(record => record.OrderId)
+                    .Get(item => item.OrderId)
                 .End()
                 .ExecuteAsync();
 
             // assert
             result.Should().HaveCount(2);
 
-            // verify fetched customer record
+            // verify fetched customer item
             var customerRecords = result.OfType<CustomerRecord>().ToList();
             customerRecords.Should().HaveCount(1);
             var fetchedCustomer =  customerRecords.First();
@@ -362,7 +362,7 @@ namespace Integration.LambdaSharp.DynamoDB.Native {
             fetchedCustomer.Username.Should().Be(customer.Username);
             fetchedCustomer.Name.Should().BeNull();
 
-            // verify fetched customer record
+            // verify fetched customer item
             var orderRecords = result.OfType<OrderRecord>().ToList();
             orderRecords.Should().HaveCount(1);
             var fetchedOrder =  orderRecords.First();

@@ -41,7 +41,7 @@ class DynamoTimeSpanConverter : ADynamoAttributeConverter {
 The custom converter must then be added to the serialization options to become available.
 
 ```csharp
-var document = DynamoSerializer.Serialize(record, new DynamoSerializerOptions {
+var document = DynamoSerializer.Serialize(item, new DynamoSerializerOptions {
     Converters = {
         new DynamoTimeSpanConverter()
     }

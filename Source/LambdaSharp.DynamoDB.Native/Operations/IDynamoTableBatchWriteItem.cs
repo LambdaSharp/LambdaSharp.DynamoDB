@@ -34,27 +34,27 @@ namespace LambdaSharp.DynamoDB.Native.Operations {
         /// Begin specification of a PutItem operation for BatchWriteItems.
         /// </summary>
         /// <param name="primaryKey">Primary key of the item to write.</param>
-        /// <param name="record">The record to write</param>
-        /// <typeparam name="TRecord">The record type.</typeparam>
-        IDynamoTableBatchWriteItemsPutItem<TRecord> BeginPutItem<TRecord>(DynamoPrimaryKey<TRecord> primaryKey, TRecord record)
-            where TRecord : class;
+        /// <param name="item">The item to write</param>
+        /// <typeparam name="TItem">The item type.</typeparam>
+        IDynamoTableBatchWriteItemsPutItem<TItem> BeginPutItem<TItem>(DynamoPrimaryKey<TItem> primaryKey, TItem item)
+            where TItem : class;
 
         /// <summary>
-        /// Add a PutItem operation to BatchWriteItems for the given primary key and record. When successful, this operation creates a new row or replaces all attributes of the matching row.
+        /// Add a PutItem operation to BatchWriteItems for the given primary key and item. When successful, this operation creates a new row or replaces all attributes of the matching row.
         /// </summary>
         /// <param name="primaryKey">Primary key of the item to write.</param>
-        /// <param name="record">The record to write</param>
-        /// <typeparam name="TRecord">The record type.</typeparam>
-        IDynamoTableBatchWriteItems PutItem<TRecord>(TRecord record, DynamoPrimaryKey<TRecord> primaryKey)
-            where TRecord : class;
+        /// <param name="item">The item to write</param>
+        /// <typeparam name="TItem">The item type.</typeparam>
+        IDynamoTableBatchWriteItems PutItem<TItem>(TItem item, DynamoPrimaryKey<TItem> primaryKey)
+            where TItem : class;
 
         /// <summary>
         /// Add a DeleteItem operation to BatchWriteItems for the given primary key.
         /// </summary>
         /// <param name="primaryKey">Primary key of the item to delete.</param>
-        /// <typeparam name="TRecord">The record type.</typeparam>
-        IDynamoTableBatchWriteItems DeleteItem<TRecord>(DynamoPrimaryKey<TRecord> primaryKey)
-            where TRecord : class;
+        /// <typeparam name="TItem">The item type.</typeparam>
+        IDynamoTableBatchWriteItems DeleteItem<TItem>(DynamoPrimaryKey<TItem> primaryKey)
+            where TItem : class;
 
         /// <summary>
         /// Execute the BatchWriteItems operation.
@@ -68,8 +68,8 @@ namespace LambdaSharp.DynamoDB.Native.Operations {
     /// <summary>
     /// Interface to specify a PutItem operation for BatchWriteItems.
     /// </summary>
-    /// <typeparam name="TRecord">The record type.</typeparam>
-    public interface IDynamoTableBatchWriteItemsPutItem<TRecord> where TRecord : class {
+    /// <typeparam name="TItem">The item type.</typeparam>
+    public interface IDynamoTableBatchWriteItemsPutItem<TItem> where TItem : class {
 
         //--- Methods ---
 
@@ -78,7 +78,7 @@ namespace LambdaSharp.DynamoDB.Native.Operations {
         /// </summary>
         /// <param name="key">Name of attribute.</param>
         /// <param name="value">Value of attribute.</param>
-        IDynamoTableBatchWriteItemsPutItem<TRecord> Set(string key, AttributeValue value);
+        IDynamoTableBatchWriteItemsPutItem<TItem> Set(string key, AttributeValue value);
 
         /// <summary>
         /// End specification of the GetItem operation for BatchGetItems.
@@ -92,7 +92,7 @@ namespace LambdaSharp.DynamoDB.Native.Operations {
         /// </summary>
         /// <param name="key">Name of attribute.</param>
         /// <param name="value">Value of attribute.</param>
-        IDynamoTableBatchWriteItemsPutItem<TRecord> Set(string key, string value)
+        IDynamoTableBatchWriteItemsPutItem<TItem> Set(string key, string value)
             => Set(key, new AttributeValue(value));
     }
 }

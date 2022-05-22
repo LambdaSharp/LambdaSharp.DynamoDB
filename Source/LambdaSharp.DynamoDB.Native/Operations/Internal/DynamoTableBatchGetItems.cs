@@ -33,8 +33,8 @@ namespace LambdaSharp.DynamoDB.Native.Operations.Internal {
         private const int MILLISECOND_BACKOFF = 100;
 
         //--- Types ---
-        internal sealed class DynamoTableBatchGetItemsGetItem<TRecord> : IDynamoTableBatchGetItemsGetItem<TRecord>
-            where TRecord : class
+        internal sealed class DynamoTableBatchGetItemsGetItem<TItem> : IDynamoTableBatchGetItemsGetItem<TItem>
+            where TItem : class
         {
 
             //--- Fields ---
@@ -45,7 +45,7 @@ namespace LambdaSharp.DynamoDB.Native.Operations.Internal {
                 => _parent = parent ?? throw new ArgumentNullException(nameof(parent));
 
             //--- Methods ---
-            public IDynamoTableBatchGetItemsGetItem<TRecord> Get<T>(System.Linq.Expressions.Expression<Func<TRecord, T>> attribute) {
+            public IDynamoTableBatchGetItemsGetItem<TItem> Get<T>(System.Linq.Expressions.Expression<Func<TItem, T>> attribute) {
                 _parent._converter.AddProjection(attribute.Body);
 
                 // NOTE (2021-06-24, bjorg): we always fetch `_t` to allow polymorphic deserialization
@@ -69,13 +69,13 @@ namespace LambdaSharp.DynamoDB.Native.Operations.Internal {
         }
 
         //--- Methods ---
-        public IDynamoTableBatchGetItemsGetItem<TRecord> BeginGetItem<TRecord>(DynamoPrimaryKey<TRecord> primaryKey, bool consistentRead = false) where TRecord : class {
+        public IDynamoTableBatchGetItemsGetItem<TItem> BeginGetItem<TItem>(DynamoPrimaryKey<TItem> primaryKey, bool consistentRead = false) where TItem : class {
             _request.RequestItems.First().Value.Keys.Add(new Dictionary<string, AttributeValue> {
                 [primaryKey.PKName] = new AttributeValue(primaryKey.PKValue),
                 [primaryKey.SKName] = new AttributeValue(primaryKey.SKValue)
             });
-            _converter.AddExpectedType(typeof(TRecord));
-            return new DynamoTableBatchGetItemsGetItem<TRecord>(this);
+            _converter.AddExpectedType(typeof(TItem));
+            return new DynamoTableBatchGetItemsGetItem<TItem>(this);
         }
 
         public async Task<IEnumerable<object>> ExecuteAsync(int maxAttempts, CancellationToken cancellationToken = default) {
@@ -95,10 +95,10 @@ namespace LambdaSharp.DynamoDB.Native.Operations.Internal {
                 try {
                     var response = await _table.DynamoClient.BatchGetItemAsync(_request, cancellationToken);
                     if(response.Responses.Any()) {
-                        foreach(var item in response.Responses.Single().Value) {
-                            var record = _table.DeserializeItemUsingRecordType(item, typeof(object), _converter.ExpectedTypes);
-                            if(!(record is null)) {
-                                result.Add(record);
+                        foreach(var itemKeyAttributeValues in response.Responses.Single().Value) {
+                            var item = _table.DeserializeItemUsingItemType(itemKeyAttributeValues, typeof(object), _converter.ExpectedTypes);
+                            if(!(item is null)) {
+                                result.Add(item);
                             }
                         }
                     }

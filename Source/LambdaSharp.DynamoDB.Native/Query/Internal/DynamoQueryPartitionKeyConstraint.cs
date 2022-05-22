@@ -41,9 +41,9 @@ namespace LambdaSharp.DynamoDB.Native.Internal {
         public IDynamoQuerySortKeyConstraint SelectPK(string pkValue)
             => new DynamoQuerySelectAny<object>(IndexName, PKName, SKName, pkValue, Enumerable.Empty<Type>());
 
-        public IDynamoQuerySortKeyConstraint<TRecord> SelectPK<TRecord>(string pkValue)
-            where TRecord : class
-            => new DynamoQuerySelectAny<TRecord>(IndexName, PKName, SKName, pkValue, Enumerable.Empty<Type>());
+        public IDynamoQuerySortKeyConstraint<TItem> SelectPK<TItem>(string pkValue)
+            where TItem : class
+            => new DynamoQuerySelectAny<TItem>(IndexName, PKName, SKName, pkValue, Enumerable.Empty<Type>());
     }
 }
 

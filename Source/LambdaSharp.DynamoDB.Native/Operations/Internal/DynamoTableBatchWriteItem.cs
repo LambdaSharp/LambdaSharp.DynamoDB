@@ -32,8 +32,8 @@ namespace LambdaSharp.DynamoDB.Native.Operations.Internal {
         private const int MILLISECOND_BACKOFF = 100;
 
         //--- Types ---
-        private class DynamoTableBatchWriteItemsPutItem<TRecord> : IDynamoTableBatchWriteItemsPutItem<TRecord>
-            where TRecord : class
+        private class DynamoTableBatchWriteItemsPutItem<TItem> : IDynamoTableBatchWriteItemsPutItem<TItem>
+            where TItem : class
         {
 
             //--- Fields ---
@@ -47,7 +47,7 @@ namespace LambdaSharp.DynamoDB.Native.Operations.Internal {
             }
 
             //--- Methods ---
-            public IDynamoTableBatchWriteItemsPutItem<TRecord> Set(string key, AttributeValue value) {
+            public IDynamoTableBatchWriteItemsPutItem<TItem> Set(string key, AttributeValue value) {
                 _putRequest.Item[key] = value;
                 return this;
             }
@@ -66,26 +66,26 @@ namespace LambdaSharp.DynamoDB.Native.Operations.Internal {
         }
 
         //--- Methods ---
-        public IDynamoTableBatchWriteItems PutItem<TRecord>(TRecord record, DynamoPrimaryKey<TRecord> primaryKey) where TRecord : class {
+        public IDynamoTableBatchWriteItems PutItem<TItem>(TItem item, DynamoPrimaryKey<TItem> primaryKey) where TItem : class {
             _request.RequestItems.First().Value.Add(new WriteRequest {
                 PutRequest = new PutRequest {
-                    Item = _table.SerializeItem(record, primaryKey)
+                    Item = _table.SerializeItem(item, primaryKey)
                 }
             });
             return this;
         }
 
-        public IDynamoTableBatchWriteItemsPutItem<TRecord> BeginPutItem<TRecord>(DynamoPrimaryKey<TRecord> primaryKey, TRecord record) where TRecord : class {
+        public IDynamoTableBatchWriteItemsPutItem<TItem> BeginPutItem<TItem>(DynamoPrimaryKey<TItem> primaryKey, TItem item) where TItem : class {
             var putRequest = new PutRequest {
-                Item = _table.SerializeItem(record, primaryKey)
+                Item = _table.SerializeItem(item, primaryKey)
             };
             _request.RequestItems.First().Value.Add(new WriteRequest {
                 PutRequest = putRequest
             });
-            return new DynamoTableBatchWriteItemsPutItem<TRecord>(this, putRequest);
+            return new DynamoTableBatchWriteItemsPutItem<TItem>(this, putRequest);
         }
 
-        public IDynamoTableBatchWriteItems DeleteItem<TRecord>(DynamoPrimaryKey<TRecord> primaryKey) where TRecord : class {
+        public IDynamoTableBatchWriteItems DeleteItem<TItem>(DynamoPrimaryKey<TItem> primaryKey) where TItem : class {
             _request.RequestItems.First().Value.Add(new WriteRequest {
                 DeleteRequest = new DeleteRequest {
                     Key = new Dictionary<string, AttributeValue> {

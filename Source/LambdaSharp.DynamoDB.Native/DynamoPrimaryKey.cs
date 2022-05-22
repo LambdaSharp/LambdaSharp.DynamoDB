@@ -79,20 +79,20 @@ namespace LambdaSharp.DynamoDB.Native {
     /// <summary>
     /// Represents a typed DynamoDB primary key.
     /// </summary>
-    /// <typeparam name="TRecord">The record type.</typeparam>
-    public class DynamoPrimaryKey<TRecord> : DynamoPrimaryKey where TRecord : class {
+    /// <typeparam name="TItem">The item type.</typeparam>
+    public class DynamoPrimaryKey<TItem> : DynamoPrimaryKey where TItem : class {
 
         //--- Constructors ---
 
         /// <summary>
-        /// Creates a new <see cref="DynamoPrimaryKey{TRecord}"/> instance.
+        /// Creates a new <see cref="DynamoPrimaryKey{TItem}"/> instance.
         /// </summary>
         /// <param name="pkValue">The partition key (PK) value.</param>
         /// <param name="skValue">The sort key (SK) value.</param>
         public DynamoPrimaryKey(string pkValue, string skValue) : base(pkValue, skValue) { }
 
         /// <summary>
-        /// Creates a new <see cref="DynamoPrimaryKey{TRecord}"/> instance.
+        /// Creates a new <see cref="DynamoPrimaryKey{TItem}"/> instance.
         /// </summary>
         /// <param name="pkValueFormat">The format string for the partition key (PK) value.</param>
         /// <param name="skValueFormat">The format string for the sort key (PK) value.</param>

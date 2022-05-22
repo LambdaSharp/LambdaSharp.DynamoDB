@@ -108,25 +108,25 @@ namespace LambdaSharp.DynamoDB.Serialization {
         }
 
         /// <summary>
-        /// The <see cref="Deserialize(Dictionary{string, AttributeValue})"/> method deserializes a DynamoDB document into a <typeparamref name="TRecord"/> instance using the default <see cref="DynamoSerializerOptions"/> instance.
+        /// The <see cref="Deserialize(Dictionary{string, AttributeValue})"/> method deserializes a DynamoDB document into a <typeparamref name="TItem"/> instance using the default <see cref="DynamoSerializerOptions"/> instance.
         /// </summary>
         /// <param name="document">The DynamoDB document to deserialize.</param>
-        /// <typeparam name="TRecord">The type to deserialize into.</typeparam>
-        /// <returns>An instance of <typeparamref name="TRecord"/> or <c>null</c> when the DynamoDB document is <c>null</c>.</returns>
-        public static TRecord? Deserialize<TRecord>(Dictionary<string, AttributeValue> document)
-            where TRecord : class
-            => Deserialize<TRecord>(document, new DynamoSerializerOptions());
+        /// <typeparam name="TItem">The type to deserialize into.</typeparam>
+        /// <returns>An instance of <typeparamref name="TItem"/> or <c>null</c> when the DynamoDB document is <c>null</c>.</returns>
+        public static TItem? Deserialize<TItem>(Dictionary<string, AttributeValue> document)
+            where TItem : class
+            => Deserialize<TItem>(document, new DynamoSerializerOptions());
 
         /// <summary>
-        /// The <see cref="Deserialize(Dictionary{string, AttributeValue},DynamoSerializerOptions)"/> method deserializes a DynamoDB document into a <typeparamref name="TRecord"/> instance.
+        /// The <see cref="Deserialize(Dictionary{string, AttributeValue},DynamoSerializerOptions)"/> method deserializes a DynamoDB document into a <typeparamref name="TItem"/> instance.
         /// </summary>
         /// <param name="document">The DynamoDB document to deserialize.</param>
         /// <param name="options">The deserialization options to use.</param>
-        /// <typeparam name="TRecord">The type to deserialize into.</typeparam>
-        /// <returns>An instance of <typeparamref name="TRecord"/> or <c>null</c> when the DynamoDB document is <c>null</c>.</returns>
-        public static TRecord? Deserialize<TRecord>(Dictionary<string, AttributeValue> document, DynamoSerializerOptions options)
-            where TRecord : class
-            => (TRecord?)Deserialize(document, typeof(TRecord), options);
+        /// <typeparam name="TItem">The type to deserialize into.</typeparam>
+        /// <returns>An instance of <typeparamref name="TItem"/> or <c>null</c> when the DynamoDB document is <c>null</c>.</returns>
+        public static TItem? Deserialize<TItem>(Dictionary<string, AttributeValue> document, DynamoSerializerOptions options)
+            where TItem : class
+            => (TItem?)Deserialize(document, typeof(TItem), options);
 
         /// <summary>
         /// The <see cref="Deserialize(Dictionary{string, AttributeValue},Type)"/> method deserializes a DynamoDB document into a <paramref name="targetType"/> instance using the default <see cref="DynamoSerializerOptions"/> instance.

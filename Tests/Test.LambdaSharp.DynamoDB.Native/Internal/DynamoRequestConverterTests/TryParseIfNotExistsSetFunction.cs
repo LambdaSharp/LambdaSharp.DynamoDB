@@ -49,7 +49,7 @@ namespace Test.LambdaSharp.DynamoDB.Internal.DynamoRequestConverterTests {
             var converter = new DynamoRequestConverter(new(), new(), new());
 
             // act
-            var expression = LambdaBody(record => DynamoUpdate.IfNotExists(record.List, new List<string>()));
+            var expression = LambdaBody(item => DynamoUpdate.IfNotExists(item.List, new List<string>()));
             var success = converter.TryParseIfNotExistsSetFunction(expression, out var output);
 
             // assert

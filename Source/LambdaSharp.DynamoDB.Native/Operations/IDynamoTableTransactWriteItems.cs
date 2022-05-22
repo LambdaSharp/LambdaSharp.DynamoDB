@@ -36,30 +36,30 @@ namespace LambdaSharp.DynamoDB.Native.Operations {
         /// Begin specification of a PutItem operation for TransactWriteItems.
         /// </summary>
         /// <param name="primaryKey">Primary key of the item to write.</param>
-        /// <param name="record">The record to write</param>
-        /// <typeparam name="TRecord">The record type.</typeparam>
-        IDynamoTableTransactWriteItemsPutItem<TRecord> BeginPutItem<TRecord>(DynamoPrimaryKey<TRecord> primaryKey, TRecord record) where TRecord : class;
+        /// <param name="item">The item to write</param>
+        /// <typeparam name="TItem">The item type.</typeparam>
+        IDynamoTableTransactWriteItemsPutItem<TItem> BeginPutItem<TItem>(DynamoPrimaryKey<TItem> primaryKey, TItem item) where TItem : class;
 
         /// <summary>
         /// Begin specification of a UpdateItem operation for TransactWriteItems.
         /// </summary>
         /// <param name="primaryKey">Primary key of the item to write.</param>
-        /// <typeparam name="TRecord">The record type.</typeparam>
-        IDynamoTableTransactWriteItemsUpdateItem<TRecord> BeginUpdateItem<TRecord>(DynamoPrimaryKey<TRecord> primaryKey) where TRecord : class;
+        /// <typeparam name="TItem">The item type.</typeparam>
+        IDynamoTableTransactWriteItemsUpdateItem<TItem> BeginUpdateItem<TItem>(DynamoPrimaryKey<TItem> primaryKey) where TItem : class;
 
         /// <summary>
         /// Begin specification of a DeleteItem operation for TransactWriteItems.
         /// </summary>
         /// <param name="primaryKey">Primary key of the item to write.</param>
-        /// <typeparam name="TRecord">The record type.</typeparam>
-        IDynamoTableTransactWriteItemsDeleteItem<TRecord> BeginDeleteItem<TRecord>(DynamoPrimaryKey<TRecord> primaryKey) where TRecord : class;
+        /// <typeparam name="TItem">The item type.</typeparam>
+        IDynamoTableTransactWriteItemsDeleteItem<TItem> BeginDeleteItem<TItem>(DynamoPrimaryKey<TItem> primaryKey) where TItem : class;
 
         /// <summary>
         /// Begin specification of a ConditionCheck operation for TransactWriteItems.
         /// </summary>
         /// <param name="primaryKey">Primary key of the item to write.</param>
-        /// <typeparam name="TRecord">The record type.</typeparam>
-        IDynamoTableTransactWriteItemsConditionCheck<TRecord> BeginConditionCheck<TRecord>(DynamoPrimaryKey<TRecord> primaryKey) where TRecord : class;
+        /// <typeparam name="TItem">The item type.</typeparam>
+        IDynamoTableTransactWriteItemsConditionCheck<TItem> BeginConditionCheck<TItem>(DynamoPrimaryKey<TItem> primaryKey) where TItem : class;
 
         /// <summary>
         /// Execute the TransactWriteItems operation.
@@ -73,32 +73,32 @@ namespace LambdaSharp.DynamoDB.Native.Operations {
         /// <summary>
         /// Add a PutItem operation to TransactWriteItems.
         ///
-        /// This method is the same: <c>BeginPutItem(primaryKey, record).End()</c>.
+        /// This method is the same: <c>BeginPutItem(primaryKey, item).End()</c>.
         /// </summary>
         /// <param name="primaryKey">Primary key of the item to delete.</param>
-        /// <param name="record">The record to write</param>
-        /// <typeparam name="TRecord">The record type.</typeparam>
-        IDynamoTableTransactWriteItems PutItem<TRecord>(DynamoPrimaryKey<TRecord> primaryKey, TRecord record)
-            where TRecord : class
-            => BeginPutItem(primaryKey, record).End();
+        /// <param name="item">The item to write</param>
+        /// <typeparam name="TItem">The item type.</typeparam>
+        IDynamoTableTransactWriteItems PutItem<TItem>(DynamoPrimaryKey<TItem> primaryKey, TItem item)
+            where TItem : class
+            => BeginPutItem(primaryKey, item).End();
 
         /// <summary>
         /// Add a DeleteItem operation to TransactWriteItems.
         ///
-        /// This method is the same: <c>BeginPutItem(primaryKey, record).End()</c>.
+        /// This method is the same: <c>BeginPutItem(primaryKey, item).End()</c>.
         /// </summary>
         /// <param name="primaryKey">Primary key of the item to delete.</param>
-        /// <typeparam name="TRecord">The record type.</typeparam>
-        IDynamoTableTransactWriteItems DeleteItem<TRecord>(DynamoPrimaryKey<TRecord> primaryKey)
-            where TRecord : class
+        /// <typeparam name="TItem">The item type.</typeparam>
+        IDynamoTableTransactWriteItems DeleteItem<TItem>(DynamoPrimaryKey<TItem> primaryKey)
+            where TItem : class
             => BeginDeleteItem(primaryKey).End();
     }
 
     /// <summary>
     /// Interface to specify a PutItem operation for TransactWriteItems.
     /// </summary>
-    /// <typeparam name="TRecord">The record type.</typeparam>
-    public interface IDynamoTableTransactWriteItemsPutItem<TRecord> where TRecord : class {
+    /// <typeparam name="TItem">The item type.</typeparam>
+    public interface IDynamoTableTransactWriteItemsPutItem<TItem> where TItem : class {
 
         //--- Methods ---
 
@@ -106,24 +106,24 @@ namespace LambdaSharp.DynamoDB.Native.Operations {
         /// Add condition for PutItem operation.
         /// </summary>
         /// <param name="condition">A lambda predicate representing the DynamoDB condition expression.</param>
-        IDynamoTableTransactWriteItemsPutItem<TRecord> WithCondition(Expression<Func<TRecord, bool>> condition);
+        IDynamoTableTransactWriteItemsPutItem<TItem> WithCondition(Expression<Func<TItem, bool>> condition);
 
         /// <summary>
         /// Add condition that item exists for PutItem operation.
         /// </summary>
-        IDynamoTableTransactWriteItemsPutItem<TRecord> WithConditionItemExists() => WithCondition(record => DynamoCondition.Exists(record));
+        IDynamoTableTransactWriteItemsPutItem<TItem> WithConditionItemExists() => WithCondition(item => DynamoCondition.Exists(item));
 
         /// <summary>
         /// Add condition that item does not exist for PutItem operation.
         /// </summary>
-        IDynamoTableTransactWriteItemsPutItem<TRecord> WithConditionItemDoesNotExist() => WithCondition(record => DynamoCondition.DoesNotExist(record));
+        IDynamoTableTransactWriteItemsPutItem<TItem> WithConditionItemDoesNotExist() => WithCondition(item => DynamoCondition.DoesNotExist(item));
 
         /// <summary>
         /// Set the value of a DynamoDB item attribute. Used for storing attributes used by local/global secondary indices.
         /// </summary>
         /// <param name="key">Name of attribute.</param>
         /// <param name="value">Value of attribute.</param>
-        IDynamoTableTransactWriteItemsPutItem<TRecord> Set(string key, AttributeValue value);
+        IDynamoTableTransactWriteItemsPutItem<TItem> Set(string key, AttributeValue value);
 
         /// <summary>
         /// End specification of the PutItem operation for TransactWriteItems.
@@ -134,8 +134,8 @@ namespace LambdaSharp.DynamoDB.Native.Operations {
     /// <summary>
     /// Interface to specify a UpdateItem operation for TransactWriteItems.
     /// </summary>
-    /// <typeparam name="TRecord">The record type.</typeparam>
-    public interface IDynamoTableTransactWriteItemsUpdateItem<TRecord> where TRecord : class  {
+    /// <typeparam name="TItem">The item type.</typeparam>
+    public interface IDynamoTableTransactWriteItemsUpdateItem<TItem> where TItem : class  {
 
         //--- Methods ---
 
@@ -143,17 +143,17 @@ namespace LambdaSharp.DynamoDB.Native.Operations {
         /// Add condition for UpdateItem operation.
         /// </summary>
         /// <param name="condition">A lambda predicate representing the DynamoDB condition expression.</param>
-        IDynamoTableTransactWriteItemsUpdateItem<TRecord> WithCondition(Expression<Func<TRecord, bool>> condition);
+        IDynamoTableTransactWriteItemsUpdateItem<TItem> WithCondition(Expression<Func<TItem, bool>> condition);
 
         /// <summary>
         /// Add condition that item exists for UpdateItem operation.
         /// </summary>
-        IDynamoTableTransactWriteItemsUpdateItem<TRecord> WithConditionItemExists() => WithCondition(record => DynamoCondition.Exists(record));
+        IDynamoTableTransactWriteItemsUpdateItem<TItem> WithConditionItemExists() => WithCondition(item => DynamoCondition.Exists(item));
 
         /// <summary>
         /// Add condition that item does not exist for UpdateItem operation.
         /// </summary>
-        IDynamoTableTransactWriteItemsUpdateItem<TRecord> WithConditionItemDoesNotExist() => WithCondition(record => DynamoCondition.DoesNotExist(record));
+        IDynamoTableTransactWriteItemsUpdateItem<TItem> WithConditionItemDoesNotExist() => WithCondition(item => DynamoCondition.DoesNotExist(item));
 
         /// <summary>
         /// End specification of the UpdateItem operation for TransactWriteItems.
@@ -163,206 +163,206 @@ namespace LambdaSharp.DynamoDB.Native.Operations {
         // *** `SET Foo.Bar = :value` action ***
 
         /// <summary>
-        /// Set a record property.
+        /// Set a item property.
         /// </summary>
-        /// <param name="attribute">A lambda expression that selects the target record property.</param>
+        /// <param name="attribute">A lambda expression that selects the target item property.</param>
         /// <param name="value">The value to set.</param>
         /// <typeparam name="T">The property type.</typeparam>
-        IDynamoTableTransactWriteItemsUpdateItem<TRecord> Set<T>(Expression<Func<TRecord, T>> attribute, T value);
+        IDynamoTableTransactWriteItemsUpdateItem<TItem> Set<T>(Expression<Func<TItem, T>> attribute, T value);
 
         /// <summary>
-        /// Set a record property.
+        /// Set a item property.
         /// </summary>
-        /// <param name="attribute">A lambda expression that selects the target record property.</param>
+        /// <param name="attribute">A lambda expression that selects the target item property.</param>
         /// <param name="value">The value to set.</param>
         /// <typeparam name="T">The property type.</typeparam>
-        IDynamoTableTransactWriteItemsUpdateItem<TRecord> Set<T>(Expression<Func<TRecord, ISet<T>>> attribute, ISet<T> value);
+        IDynamoTableTransactWriteItemsUpdateItem<TItem> Set<T>(Expression<Func<TItem, ISet<T>>> attribute, ISet<T> value);
 
         /// <summary>
-        /// Set a record property.
+        /// Set a item property.
         /// </summary>
-        /// <param name="attribute">A lambda expression that selects the target record property.</param>
+        /// <param name="attribute">A lambda expression that selects the target item property.</param>
         /// <param name="value">The value to set.</param>
         /// <typeparam name="T">The property type.</typeparam>
-        IDynamoTableTransactWriteItemsUpdateItem<TRecord> Set<T>(Expression<Func<TRecord, IDictionary<string, T>>> attribute, IDictionary<string, T> value);
+        IDynamoTableTransactWriteItemsUpdateItem<TItem> Set<T>(Expression<Func<TItem, IDictionary<string, T>>> attribute, IDictionary<string, T> value);
 
         /// <summary>
-        /// Set a record property.
+        /// Set a item property.
         /// </summary>
-        /// <param name="attribute">A lambda expression that selects the target record property.</param>
+        /// <param name="attribute">A lambda expression that selects the target item property.</param>
         /// <param name="value">The value to set.</param>
         /// <typeparam name="T">The property type.</typeparam>
-        IDynamoTableTransactWriteItemsUpdateItem<TRecord> Set<T>(Expression<Func<TRecord, IList<T>>> attribute, IList<T> value);
+        IDynamoTableTransactWriteItemsUpdateItem<TItem> Set<T>(Expression<Func<TItem, IList<T>>> attribute, IList<T> value);
 
         /// <summary>
-        /// Set a record property.
+        /// Set a item property.
         /// </summary>
-        /// <param name="attribute">A lambda expression that selects the target record property.</param>
+        /// <param name="attribute">A lambda expression that selects the target item property.</param>
         /// <param name="value">The value to set.</param>
         /// <typeparam name="T">The property type.</typeparam>
-        IDynamoTableTransactWriteItemsUpdateItem<TRecord> Set<T>(Expression<Func<TRecord, T>> attribute, Expression<Func<TRecord, T>> value);
+        IDynamoTableTransactWriteItemsUpdateItem<TItem> Set<T>(Expression<Func<TItem, T>> attribute, Expression<Func<TItem, T>> value);
 
         /// <summary>
-        /// Set a record property.
+        /// Set a item property.
         /// </summary>
-        /// <param name="attribute">A lambda expression that selects the target record property.</param>
+        /// <param name="attribute">A lambda expression that selects the target item property.</param>
         /// <param name="value">The value to set.</param>
         /// <typeparam name="T">The property type.</typeparam>
-        IDynamoTableTransactWriteItemsUpdateItem<TRecord> Set<T>(Expression<Func<TRecord, ISet<T>>> attribute, Expression<Func<TRecord, ISet<T>>> value);
+        IDynamoTableTransactWriteItemsUpdateItem<TItem> Set<T>(Expression<Func<TItem, ISet<T>>> attribute, Expression<Func<TItem, ISet<T>>> value);
 
         /// <summary>
-        /// Set a record property.
+        /// Set a item property.
         /// </summary>
-        /// <param name="attribute">A lambda expression that selects the target record property.</param>
+        /// <param name="attribute">A lambda expression that selects the target item property.</param>
         /// <param name="value">The value to set.</param>
         /// <typeparam name="T">The property type.</typeparam>
-        IDynamoTableTransactWriteItemsUpdateItem<TRecord> Set<T>(Expression<Func<TRecord, IDictionary<string, T>>> attribute, Expression<Func<TRecord, IDictionary<string, T>>> value);
+        IDynamoTableTransactWriteItemsUpdateItem<TItem> Set<T>(Expression<Func<TItem, IDictionary<string, T>>> attribute, Expression<Func<TItem, IDictionary<string, T>>> value);
 
         /// <summary>
-        /// Set a record property.
+        /// Set a item property.
         /// </summary>
-        /// <param name="attribute">A lambda expression that selects the target record property.</param>
+        /// <param name="attribute">A lambda expression that selects the target item property.</param>
         /// <param name="value">The value to set.</param>
         /// <typeparam name="T">The property type.</typeparam>
-        IDynamoTableTransactWriteItemsUpdateItem<TRecord> Set<T>(Expression<Func<TRecord, IList<T>>> attribute, Expression<Func<TRecord, IList<T>>> value);
+        IDynamoTableTransactWriteItemsUpdateItem<TItem> Set<T>(Expression<Func<TItem, IList<T>>> attribute, Expression<Func<TItem, IList<T>>> value);
 
         /// <summary>
         /// Set the value of a DynamoDB item attribute. Used for storing attributes used by local/global secondary indices.
         /// </summary>
         /// <param name="key">Name of attribute.</param>
         /// <param name="value">Value of attribute.</param>
-        IDynamoTableTransactWriteItemsUpdateItem<TRecord> Set(string key, AttributeValue value);
+        IDynamoTableTransactWriteItemsUpdateItem<TItem> Set(string key, AttributeValue value);
 
         // *** `REMOVE Brand` action ***
 
         /// <summary>
-        /// Remove a record property.
+        /// Remove a item property.
         /// </summary>
-        /// <param name="attribute">A lambda expression that selects the target record property.</param>
+        /// <param name="attribute">A lambda expression that selects the target item property.</param>
         /// <typeparam name="T">The property type.</typeparam>
-        IDynamoTableTransactWriteItemsUpdateItem<TRecord> Remove<T>(Expression<Func<TRecord, T>> attribute);
+        IDynamoTableTransactWriteItemsUpdateItem<TItem> Remove<T>(Expression<Func<TItem, T>> attribute);
 
         /// <summary>
         /// Remove a DynamoDB item attribute. Used for removing attributes used by local/global secondary indices.
         /// </summary>
         /// <param name="key">Name of attribute.</param>
-        IDynamoTableTransactWriteItemsUpdateItem<TRecord> Remove(string key);
+        IDynamoTableTransactWriteItemsUpdateItem<TItem> Remove(string key);
 
         // *** `ADD Color :c` action ***
 
         /// <summary>
-        /// Add a value to a record property.
+        /// Add a value to a item property.
         /// </summary>
-        /// <param name="attribute">A lambda expression that selects the target record property.</param>
+        /// <param name="attribute">A lambda expression that selects the target item property.</param>
         /// <param name="value">Value to add.</param>
-        IDynamoTableTransactWriteItemsUpdateItem<TRecord> Add(Expression<Func<TRecord, int>> attribute, int value);
+        IDynamoTableTransactWriteItemsUpdateItem<TItem> Add(Expression<Func<TItem, int>> attribute, int value);
 
         /// <summary>
-        /// Add a value to a record property.
+        /// Add a value to a item property.
         /// </summary>
-        /// <param name="attribute">A lambda expression that selects the target record property.</param>
+        /// <param name="attribute">A lambda expression that selects the target item property.</param>
         /// <param name="value">Value to add.</param>
-        IDynamoTableTransactWriteItemsUpdateItem<TRecord> Add(Expression<Func<TRecord, long>> attribute, long value);
+        IDynamoTableTransactWriteItemsUpdateItem<TItem> Add(Expression<Func<TItem, long>> attribute, long value);
 
         /// <summary>
-        /// Add a value to a record property.
+        /// Add a value to a item property.
         /// </summary>
-        /// <param name="attribute">A lambda expression that selects the target record property.</param>
+        /// <param name="attribute">A lambda expression that selects the target item property.</param>
         /// <param name="value">Value to add.</param>
-        IDynamoTableTransactWriteItemsUpdateItem<TRecord> Add(Expression<Func<TRecord, double>> attribute, double value);
+        IDynamoTableTransactWriteItemsUpdateItem<TItem> Add(Expression<Func<TItem, double>> attribute, double value);
 
         /// <summary>
-        /// Add a value to a record property.
+        /// Add a value to a item property.
         /// </summary>
-        /// <param name="attribute">A lambda expression that selects the target record property.</param>
+        /// <param name="attribute">A lambda expression that selects the target item property.</param>
         /// <param name="value">Value to add.</param>
-        IDynamoTableTransactWriteItemsUpdateItem<TRecord> Add(Expression<Func<TRecord, decimal>> attribute, decimal value);
+        IDynamoTableTransactWriteItemsUpdateItem<TItem> Add(Expression<Func<TItem, decimal>> attribute, decimal value);
 
         /// <summary>
-        /// Add one or more values to a record set property.
+        /// Add one or more values to a item set property.
         /// </summary>
-        /// <param name="attribute">A lambda expression that selects the target record set property.</param>
+        /// <param name="attribute">A lambda expression that selects the target item set property.</param>
         /// <param name="values">Values to add.</param>
-        IDynamoTableTransactWriteItemsUpdateItem<TRecord> Add(Expression<Func<TRecord, ISet<string>>> attribute, IEnumerable<string> values);
+        IDynamoTableTransactWriteItemsUpdateItem<TItem> Add(Expression<Func<TItem, ISet<string>>> attribute, IEnumerable<string> values);
 
         /// <summary>
-        /// Add one or more values to a record set property.
+        /// Add one or more values to a item set property.
         /// </summary>
-        /// <param name="attribute">A lambda expression that selects the target record set property.</param>
+        /// <param name="attribute">A lambda expression that selects the target item set property.</param>
         /// <param name="values">Values to add.</param>
-        IDynamoTableTransactWriteItemsUpdateItem<TRecord> Add(Expression<Func<TRecord, ISet<byte[]>>> attribute, IEnumerable<byte[]> values);
+        IDynamoTableTransactWriteItemsUpdateItem<TItem> Add(Expression<Func<TItem, ISet<byte[]>>> attribute, IEnumerable<byte[]> values);
 
         /// <summary>
-        /// Add one or more values to a record set property.
+        /// Add one or more values to a item set property.
         /// </summary>
-        /// <param name="attribute">A lambda expression that selects the target record set property.</param>
+        /// <param name="attribute">A lambda expression that selects the target item set property.</param>
         /// <param name="values">Values to add.</param>
-        IDynamoTableTransactWriteItemsUpdateItem<TRecord> Add(Expression<Func<TRecord, ISet<int>>> attribute, IEnumerable<int> values);
+        IDynamoTableTransactWriteItemsUpdateItem<TItem> Add(Expression<Func<TItem, ISet<int>>> attribute, IEnumerable<int> values);
 
         /// <summary>
-        /// Add one or more values to a record set property.
+        /// Add one or more values to a item set property.
         /// </summary>
-        /// <param name="attribute">A lambda expression that selects the target record set property.</param>
+        /// <param name="attribute">A lambda expression that selects the target item set property.</param>
         /// <param name="values">Values to add.</param>
-        IDynamoTableTransactWriteItemsUpdateItem<TRecord> Add(Expression<Func<TRecord, ISet<long>>> attribute, IEnumerable<long> values);
+        IDynamoTableTransactWriteItemsUpdateItem<TItem> Add(Expression<Func<TItem, ISet<long>>> attribute, IEnumerable<long> values);
 
         /// <summary>
-        /// Add one or more values to a record set property.
+        /// Add one or more values to a item set property.
         /// </summary>
-        /// <param name="attribute">A lambda expression that selects the target record set property.</param>
+        /// <param name="attribute">A lambda expression that selects the target item set property.</param>
         /// <param name="values">Values to add.</param>
-        IDynamoTableTransactWriteItemsUpdateItem<TRecord> Add(Expression<Func<TRecord, ISet<double>>> attribute, IEnumerable<double> values);
+        IDynamoTableTransactWriteItemsUpdateItem<TItem> Add(Expression<Func<TItem, ISet<double>>> attribute, IEnumerable<double> values);
 
         /// <summary>
-        /// Add one or more values to a record set property.
+        /// Add one or more values to a item set property.
         /// </summary>
-        /// <param name="attribute">A lambda expression that selects the target record set property.</param>
+        /// <param name="attribute">A lambda expression that selects the target item set property.</param>
         /// <param name="values">Values to add.</param>
-        IDynamoTableTransactWriteItemsUpdateItem<TRecord> Add(Expression<Func<TRecord, ISet<decimal>>> attribute, IEnumerable<decimal> values);
+        IDynamoTableTransactWriteItemsUpdateItem<TItem> Add(Expression<Func<TItem, ISet<decimal>>> attribute, IEnumerable<decimal> values);
 
         // *** `DELETE Color :p` action ***
 
         /// <summary>
-        /// Delete one or more values from a record set property.
+        /// Delete one or more values from a item set property.
         /// </summary>
-        /// <param name="attribute">A lambda expression that selects the target record set property.</param>
+        /// <param name="attribute">A lambda expression that selects the target item set property.</param>
         /// <param name="values">Values to delete.</param>
-        IDynamoTableTransactWriteItemsUpdateItem<TRecord> Delete(Expression<Func<TRecord, ISet<string>>> attribute, IEnumerable<string> values);
+        IDynamoTableTransactWriteItemsUpdateItem<TItem> Delete(Expression<Func<TItem, ISet<string>>> attribute, IEnumerable<string> values);
 
         /// <summary>
-        /// Delete one or more values from a record set property.
+        /// Delete one or more values from a item set property.
         /// </summary>
-        /// <param name="attribute">A lambda expression that selects the target record set property.</param>
+        /// <param name="attribute">A lambda expression that selects the target item set property.</param>
         /// <param name="values">Values to delete.</param>
-        IDynamoTableTransactWriteItemsUpdateItem<TRecord> Delete(Expression<Func<TRecord, ISet<byte[]>>> attribute, IEnumerable<byte[]> values);
+        IDynamoTableTransactWriteItemsUpdateItem<TItem> Delete(Expression<Func<TItem, ISet<byte[]>>> attribute, IEnumerable<byte[]> values);
 
         /// <summary>
-        /// Delete one or more values from a record set property.
+        /// Delete one or more values from a item set property.
         /// </summary>
-        /// <param name="attribute">A lambda expression that selects the target record set property.</param>
+        /// <param name="attribute">A lambda expression that selects the target item set property.</param>
         /// <param name="values">Values to delete.</param>
-        IDynamoTableTransactWriteItemsUpdateItem<TRecord> Delete(Expression<Func<TRecord, ISet<int>>> attribute, IEnumerable<int> values);
+        IDynamoTableTransactWriteItemsUpdateItem<TItem> Delete(Expression<Func<TItem, ISet<int>>> attribute, IEnumerable<int> values);
 
         /// <summary>
-        /// Delete one or more values from a record set property.
+        /// Delete one or more values from a item set property.
         /// </summary>
-        /// <param name="attribute">A lambda expression that selects the target record set property.</param>
+        /// <param name="attribute">A lambda expression that selects the target item set property.</param>
         /// <param name="values">Values to delete.</param>
-        IDynamoTableTransactWriteItemsUpdateItem<TRecord> Delete(Expression<Func<TRecord, ISet<long>>> attribute, IEnumerable<long> values);
+        IDynamoTableTransactWriteItemsUpdateItem<TItem> Delete(Expression<Func<TItem, ISet<long>>> attribute, IEnumerable<long> values);
 
         /// <summary>
-        /// Delete one or more values from a record set property.
+        /// Delete one or more values from a item set property.
         /// </summary>
-        /// <param name="attribute">A lambda expression that selects the target record set property.</param>
+        /// <param name="attribute">A lambda expression that selects the target item set property.</param>
         /// <param name="values">Values to delete.</param>
-        IDynamoTableTransactWriteItemsUpdateItem<TRecord> Delete(Expression<Func<TRecord, ISet<double>>> attribute, IEnumerable<double> values);
+        IDynamoTableTransactWriteItemsUpdateItem<TItem> Delete(Expression<Func<TItem, ISet<double>>> attribute, IEnumerable<double> values);
 
         /// <summary>
-        /// Delete one or more values from a record set property.
+        /// Delete one or more values from a item set property.
         /// </summary>
-        /// <param name="attribute">A lambda expression that selects the target record set property.</param>
+        /// <param name="attribute">A lambda expression that selects the target item set property.</param>
         /// <param name="values">Values to delete.</param>
-        IDynamoTableTransactWriteItemsUpdateItem<TRecord> Delete(Expression<Func<TRecord, ISet<decimal>>> attribute, IEnumerable<decimal> values);
+        IDynamoTableTransactWriteItemsUpdateItem<TItem> Delete(Expression<Func<TItem, ISet<decimal>>> attribute, IEnumerable<decimal> values);
 
         //--- Default Methods ---
 
@@ -371,15 +371,15 @@ namespace LambdaSharp.DynamoDB.Native.Operations {
         /// </summary>
         /// <param name="key">Name of attribute.</param>
         /// <param name="value">Value of attribute.</param>
-        IDynamoTableTransactWriteItemsUpdateItem<TRecord> Set(string key, string value)
+        IDynamoTableTransactWriteItemsUpdateItem<TItem> Set(string key, string value)
             => Set(key, new AttributeValue(value));
     }
 
     /// <summary>
     /// Interface to specify a DeleteItem operation for TransactWriteItems.
     /// </summary>
-    /// <typeparam name="TRecord">The record type.</typeparam>
-    public interface IDynamoTableTransactWriteItemsDeleteItem<TRecord> where TRecord : class  {
+    /// <typeparam name="TItem">The item type.</typeparam>
+    public interface IDynamoTableTransactWriteItemsDeleteItem<TItem> where TItem : class  {
 
         //--- Methods ---
 
@@ -387,17 +387,17 @@ namespace LambdaSharp.DynamoDB.Native.Operations {
         /// Add condition for DeleteItem operation.
         /// </summary>
         /// <param name="condition">A lambda predicate representing the DynamoDB condition expression.</param>
-        IDynamoTableTransactWriteItemsDeleteItem<TRecord> WithCondition(Expression<Func<TRecord, bool>> condition);
+        IDynamoTableTransactWriteItemsDeleteItem<TItem> WithCondition(Expression<Func<TItem, bool>> condition);
 
         /// <summary>
         /// Add condition that item exists for DeleteItem operation.
         /// </summary>
-        IDynamoTableTransactWriteItemsDeleteItem<TRecord> WithConditionItemExists() => WithCondition(record => DynamoCondition.Exists(record));
+        IDynamoTableTransactWriteItemsDeleteItem<TItem> WithConditionItemExists() => WithCondition(item => DynamoCondition.Exists(item));
 
         /// <summary>
         /// Add condition that item does not exist for DeleteItem operation.
         /// </summary>
-        IDynamoTableTransactWriteItemsDeleteItem<TRecord> WithConditionItemDoesNotExist() => WithCondition(record => DynamoCondition.DoesNotExist(record));
+        IDynamoTableTransactWriteItemsDeleteItem<TItem> WithConditionItemDoesNotExist() => WithCondition(item => DynamoCondition.DoesNotExist(item));
 
         /// <summary>
         /// End specification of the DeleteItem operation for TransactWriteItems.
@@ -408,8 +408,8 @@ namespace LambdaSharp.DynamoDB.Native.Operations {
     /// <summary>
     /// Interface to specify a ConditionCheck operation for TransactWriteItems.
     /// </summary>
-    /// <typeparam name="TRecord">The record type.</typeparam>
-    public interface IDynamoTableTransactWriteItemsConditionCheck<TRecord> where TRecord : class {
+    /// <typeparam name="TItem">The item type.</typeparam>
+    public interface IDynamoTableTransactWriteItemsConditionCheck<TItem> where TItem : class {
 
         //--- Methods ---
 
@@ -417,17 +417,17 @@ namespace LambdaSharp.DynamoDB.Native.Operations {
         /// Add condition for ConditionCheck operation.
         /// </summary>
         /// <param name="condition">A lambda predicate representing the DynamoDB condition expression.</param>
-        IDynamoTableTransactWriteItemsConditionCheck<TRecord> WithCondition(Expression<Func<TRecord, bool>> condition);
+        IDynamoTableTransactWriteItemsConditionCheck<TItem> WithCondition(Expression<Func<TItem, bool>> condition);
 
         /// <summary>
         /// Add condition that item exists for ConditionCheck operation.
         /// </summary>
-        IDynamoTableTransactWriteItemsConditionCheck<TRecord> WithConditionItemExists() => WithCondition(record => DynamoCondition.Exists(record));
+        IDynamoTableTransactWriteItemsConditionCheck<TItem> WithConditionItemExists() => WithCondition(item => DynamoCondition.Exists(item));
 
         /// <summary>
         /// Add condition that item does not exist for ConditionCheck operation.
         /// </summary>
-        IDynamoTableTransactWriteItemsConditionCheck<TRecord> WithConditionItemDoesNotExist() => WithCondition(record => DynamoCondition.DoesNotExist(record));
+        IDynamoTableTransactWriteItemsConditionCheck<TItem> WithConditionItemDoesNotExist() => WithCondition(item => DynamoCondition.DoesNotExist(item));
 
         /// <summary>
         /// End specification of the ConditionCheck operation for TransactWriteItems.

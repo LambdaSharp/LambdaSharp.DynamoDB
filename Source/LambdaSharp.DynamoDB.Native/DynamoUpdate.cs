@@ -36,33 +36,33 @@ namespace LambdaSharp.DynamoDB.Native {
         /// <summary>
         /// The <see cref="IfNotExists{T}(T,T)"/> method represents the <c>if_not_exists(path, value)</c> DynamoDB operation.
         /// </summary>
-        /// <param name="attribute">The record property to check.</param>
-        /// <param name="value">The value to use if the record property does not exist.</param>
-        /// <typeparam name="T">The type of the record property.</typeparam>
+        /// <param name="attribute">The item property to check.</param>
+        /// <param name="value">The value to use if the item property does not exist.</param>
+        /// <typeparam name="T">The type of the item property.</typeparam>
         public static T IfNotExists<T>(T attribute, T value) => throw new InvalidOperationException();
 
         /// <summary>
         /// The <see cref="IfNotExists{T}(ISet{T},ISet{T})"/> method represents the <c>if_not_exists(path, value)</c> DynamoDB operation.
         /// </summary>
-        /// <param name="attribute">The record property to check.</param>
-        /// <param name="value">The value to use if the record property does not exist.</param>
-        /// <typeparam name="T">The type of the record property.</typeparam>
+        /// <param name="attribute">The item property to check.</param>
+        /// <param name="value">The value to use if the item property does not exist.</param>
+        /// <typeparam name="T">The type of the item property.</typeparam>
         public static ISet<T> IfNotExists<T>(ISet<T> attribute, ISet<T> value) => throw new InvalidOperationException();
 
         /// <summary>
         /// The <see cref="IfNotExists{T}(IDictionary{string,T},IDictionary{string,T})"/> method represents the <c>if_not_exists(path, value)</c> DynamoDB operation.
         /// </summary>
-        /// <param name="attribute">The record property to check.</param>
-        /// <param name="value">The value to use if the record property does not exist.</param>
-        /// <typeparam name="T">The type of the record property.</typeparam>
+        /// <param name="attribute">The item property to check.</param>
+        /// <param name="value">The value to use if the item property does not exist.</param>
+        /// <typeparam name="T">The type of the item property.</typeparam>
         public static IDictionary<string, T> IfNotExists<T>(IDictionary<string, T> attribute, IDictionary<string, T> value) => throw new InvalidOperationException();
 
         /// <summary>
         /// The <see cref="IfNotExists{T}(IList{T},IList{T})"/> method represents the <c>if_not_exists(path, value)</c> DynamoDB operation.
         /// </summary>
-        /// <param name="attribute">The record property to check.</param>
-        /// <param name="value">The value to use if the record property does not exist.</param>
-        /// <typeparam name="T">The type of the record property.</typeparam>
+        /// <param name="attribute">The item property to check.</param>
+        /// <param name="value">The value to use if the item property does not exist.</param>
+        /// <typeparam name="T">The type of the item property.</typeparam>
         public static IList<T> IfNotExists<T>(IList<T> attribute, IList<T> value) => throw new InvalidOperationException();
 
         // *** `list_append(list1, list2)` function ***

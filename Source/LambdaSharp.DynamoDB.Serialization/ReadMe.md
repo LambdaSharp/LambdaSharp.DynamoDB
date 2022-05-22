@@ -7,7 +7,7 @@ Visit [LambdaSharp.NET](https://lambdasharp.net/) to learn more about building s
 
 ## Serialization
 
-Serializing a .NET type instance is straightforward using `DynamoSerialize.Serialize<T>(T record)`.
+Serializing a .NET type instance is straightforward using `DynamoSerialize.Serialize<T>(T item)`.
 
 **NOTE:** `Serialize()` will return `null` when the state of the type being serialized is not supported by DynamoDB. For example, an empty `HashSet<string>` returns `null`.
 

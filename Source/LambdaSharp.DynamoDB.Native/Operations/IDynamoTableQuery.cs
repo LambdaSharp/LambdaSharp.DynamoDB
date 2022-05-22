@@ -25,7 +25,7 @@ using System.Threading.Tasks;
 namespace LambdaSharp.DynamoDB.Native.Operations {
 
     /// <summary>
-    /// Interface to specify Query operation with mixed record types.
+    /// Interface to specify Query operation with mixed item types.
     /// </summary>
     public interface IDynamoTableQuery {
 
@@ -35,23 +35,23 @@ namespace LambdaSharp.DynamoDB.Native.Operations {
         /// Filter query results.
         /// </summary>
         /// <param name="filter">A lambda predicate representing the DynamoDB filter expression.</param>
-        /// <typeparam name="TRecord">The record type.</typeparam>
-        IDynamoTableQuery Where<TRecord>(Expression<Func<TRecord, bool>> filter) where TRecord : class;
+        /// <typeparam name="TItem">The item type.</typeparam>
+        IDynamoTableQuery Where<TItem>(Expression<Func<TItem, bool>> filter) where TItem : class;
 
         /// <summary>
-        /// Selects a record property to fetch.
+        /// Selects a item property to fetch.
         /// </summary>
-        /// <param name="attribute">A lambda expression that returns the record property.</param>
-        /// <typeparam name="TRecord">The property type.</typeparam>
-        /// <typeparam name="T">The record type.</typeparam>
-        IDynamoTableQuery Get<TRecord, T>(Expression<Func<TRecord, T>> attribute) where TRecord : class;
+        /// <param name="attribute">A lambda expression that returns the item property.</param>
+        /// <typeparam name="TItem">The property type.</typeparam>
+        /// <typeparam name="T">The item type.</typeparam>
+        IDynamoTableQuery Get<TItem, T>(Expression<Func<TItem, T>> attribute) where TItem : class;
 
         /// <summary>
         /// Execute Query operation.
         /// </summary>
         /// <param name="fetchAllAttributes">Fetch all attributes from main index when querying a local/global secondary index.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>Asynchronous enumerable which returns found records.</returns>
+        /// <returns>Asynchronous enumerable which returns found items.</returns>
         IAsyncEnumerable<object> ExecuteAsyncEnumerable(bool fetchAllAttributes, CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace LambdaSharp.DynamoDB.Native.Operations {
         /// </summary>
         /// <param name="fetchAllAttributes">Fetch all attributes from main index when querying a local/global secondary index.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>List of all found records.</returns>
+        /// <returns>List of all found items.</returns>
         Task<IEnumerable<object>> ExecuteAsync(bool fetchAllAttributes, CancellationToken cancellationToken = default);
 
         //--- Default Methods ---
@@ -68,36 +68,36 @@ namespace LambdaSharp.DynamoDB.Native.Operations {
         /// Execute Query operation.
         /// </summary>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>Asynchronous enumerable which returns found records.</returns>
+        /// <returns>Asynchronous enumerable which returns found items.</returns>
         IAsyncEnumerable<object> ExecuteAsyncEnumerable(CancellationToken cancellationToken = default) => ExecuteAsyncEnumerable(fetchAllAttributes: false, cancellationToken);
 
         /// <summary>
         /// Execute Query operation and fetch all attributes from main index when querying a local/global secondary index.
         /// </summary>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>Asynchronous enumerable which returns found records.</returns>
+        /// <returns>Asynchronous enumerable which returns found items.</returns>
         IAsyncEnumerable<object> ExecuteFetchAllAttributesAsyncEnumerable(CancellationToken cancellationToken = default) => ExecuteAsyncEnumerable(fetchAllAttributes: true, cancellationToken);
 
         /// <summary>
         /// Execute Query operation.
         /// </summary>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>List of all found records.</returns>
+        /// <returns>List of all found items.</returns>
         Task<IEnumerable<object>> ExecuteAsync(CancellationToken cancellationToken = default) => ExecuteAsync(fetchAllAttributes: false, cancellationToken);
 
         /// <summary>
         /// Execute Query operation and fetch all attributes from main index when querying a local/global secondary index.
         /// </summary>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>List of all found records.</returns>
+        /// <returns>List of all found items.</returns>
         Task<IEnumerable<object>> ExecuteFetchAllAttributesAsync(CancellationToken cancellationToken = default) => ExecuteAsync(fetchAllAttributes: true, cancellationToken);
     }
 
     /// <summary>
     /// Interface to specify Query operation.
     /// </summary>
-    /// <typeparam name="TRecord">The record type.</typeparam>
-    public interface IDynamoTableQuery<TRecord> where TRecord : class {
+    /// <typeparam name="TItem">The item type.</typeparam>
+    public interface IDynamoTableQuery<TItem> where TItem : class {
 
         //--- Methods ---
 
@@ -105,30 +105,30 @@ namespace LambdaSharp.DynamoDB.Native.Operations {
         /// Filter query results.
         /// </summary>
         /// <param name="filter">A lambda predicate representing the DynamoDB filter expression.</param>
-        IDynamoTableQuery<TRecord> Where(Expression<Func<TRecord, bool>> filter);
+        IDynamoTableQuery<TItem> Where(Expression<Func<TItem, bool>> filter);
 
         /// <summary>
-        /// Selects a record property to fetch.
+        /// Selects a item property to fetch.
         /// </summary>
-        /// <param name="attribute">A lambda expression that returns the record property.</param>
+        /// <param name="attribute">A lambda expression that returns the item property.</param>
         /// <typeparam name="T">The property type.</typeparam>
-        IDynamoTableQuery<TRecord> Get<T>(Expression<Func<TRecord, T>> attribute);
+        IDynamoTableQuery<TItem> Get<T>(Expression<Func<TItem, T>> attribute);
 
         /// <summary>
         /// Execute Query operation.
         /// </summary>
         /// <param name="fetchAllAttributes">Fetch all attributes from main index when querying a local/global secondary index.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>Asynchronous enumerable which returns found records.</returns>
-        IAsyncEnumerable<TRecord> ExecuteAsyncEnumerable(bool fetchAllAttributes, CancellationToken cancellationToken = default);
+        /// <returns>Asynchronous enumerable which returns found items.</returns>
+        IAsyncEnumerable<TItem> ExecuteAsyncEnumerable(bool fetchAllAttributes, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Execute Query operation.
         /// </summary>
         /// <param name="fetchAllAttributes">Fetch all attributes from main index when querying a local/global secondary index.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>List of all found records.</returns>
-        Task<IEnumerable<TRecord>> ExecuteAsync(bool fetchAllAttributes, CancellationToken cancellationToken = default);
+        /// <returns>List of all found items.</returns>
+        Task<IEnumerable<TItem>> ExecuteAsync(bool fetchAllAttributes, CancellationToken cancellationToken = default);
 
         //--- Default Methods ---
 
@@ -136,28 +136,28 @@ namespace LambdaSharp.DynamoDB.Native.Operations {
         /// Execute Query operation.
         /// </summary>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>Asynchronous enumerable which returns found records.</returns>
-        IAsyncEnumerable<TRecord> ExecuteAsyncEnumerable(CancellationToken cancellationToken = default) => ExecuteAsyncEnumerable(fetchAllAttributes: false, cancellationToken);
+        /// <returns>Asynchronous enumerable which returns found items.</returns>
+        IAsyncEnumerable<TItem> ExecuteAsyncEnumerable(CancellationToken cancellationToken = default) => ExecuteAsyncEnumerable(fetchAllAttributes: false, cancellationToken);
 
         /// <summary>
         /// Execute Query operation and fetch all attributes from main index when querying a local/global secondary index.
         /// </summary>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>Asynchronous enumerable which returns found records.</returns>
-        IAsyncEnumerable<TRecord> ExecuteFetchAllAttributesAsyncEnumerable(CancellationToken cancellationToken = default) => ExecuteAsyncEnumerable(fetchAllAttributes: true, cancellationToken);
+        /// <returns>Asynchronous enumerable which returns found items.</returns>
+        IAsyncEnumerable<TItem> ExecuteFetchAllAttributesAsyncEnumerable(CancellationToken cancellationToken = default) => ExecuteAsyncEnumerable(fetchAllAttributes: true, cancellationToken);
 
         /// <summary>
         /// Execute Query operation.
         /// </summary>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>List of all found records.</returns>
-        Task<IEnumerable<TRecord>> ExecuteAsync(CancellationToken cancellationToken = default) => ExecuteAsync(fetchAllAttributes: false, cancellationToken);
+        /// <returns>List of all found items.</returns>
+        Task<IEnumerable<TItem>> ExecuteAsync(CancellationToken cancellationToken = default) => ExecuteAsync(fetchAllAttributes: false, cancellationToken);
 
         /// <summary>
         /// Execute Query operation and fetch all attributes from main index when querying a local/global secondary index.
         /// </summary>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>List of all found records.</returns>
-        Task<IEnumerable<TRecord>> ExecuteFetchAllAttributesAsync(CancellationToken cancellationToken = default) => ExecuteAsync(fetchAllAttributes: true, cancellationToken);
+        /// <returns>List of all found items.</returns>
+        Task<IEnumerable<TItem>> ExecuteFetchAllAttributesAsync(CancellationToken cancellationToken = default) => ExecuteAsync(fetchAllAttributes: true, cancellationToken);
     }
 }

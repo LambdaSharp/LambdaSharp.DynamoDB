@@ -25,8 +25,8 @@ using LambdaSharp.DynamoDB.Native.Internal;
 
 namespace LambdaSharp.DynamoDB.Native.Operations.Internal {
 
-    internal sealed class DynamoTableGetItem<TRecord> : IDynamoTableGetItem<TRecord>
-        where TRecord : class
+    internal sealed class DynamoTableGetItem<TItem> : IDynamoTableGetItem<TItem>
+        where TItem : class
     {
 
         //--- Fields ---
@@ -42,16 +42,16 @@ namespace LambdaSharp.DynamoDB.Native.Operations.Internal {
         }
 
         //--- Methods ---
-        public IDynamoTableGetItem<TRecord> Get<T>(Expression<Func<TRecord, T>> attribute) {
+        public IDynamoTableGetItem<TItem> Get<T>(Expression<Func<TItem, T>> attribute) {
             _converter.AddProjection(attribute.Body);
             return this;
         }
 
-        public async Task<TRecord?> ExecuteAsync(CancellationToken cancellationToken) {
+        public async Task<TItem?> ExecuteAsync(CancellationToken cancellationToken) {
             _request.ProjectionExpression = _converter.ConvertProjections();
             var response = await _table.DynamoClient.GetItemAsync(_request, cancellationToken);
             return response.IsItemSet
-                ? _table.DeserializeItem<TRecord>(response.Item)
+                ? _table.DeserializeItem<TItem>(response.Item)
                 : null;
         }
     }

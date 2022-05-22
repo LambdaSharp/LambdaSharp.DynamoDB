@@ -26,8 +26,8 @@ using LambdaSharp.DynamoDB.Native.Internal;
 
 namespace LambdaSharp.DynamoDB.Native.Operations.Internal {
 
-    internal sealed class DynamoTableDeleteItem<TRecord> : IDynamoTableDeleteItem<TRecord>
-        where TRecord : class
+    internal sealed class DynamoTableDeleteItem<TItem> : IDynamoTableDeleteItem<TItem>
+        where TItem : class
     {
 
         //--- Fields ---
@@ -43,7 +43,7 @@ namespace LambdaSharp.DynamoDB.Native.Operations.Internal {
         }
 
         //--- Methods ---
-        public IDynamoTableDeleteItem<TRecord> WithCondition(Expression<Func<TRecord, bool>> condition) {
+        public IDynamoTableDeleteItem<TItem> WithCondition(Expression<Func<TItem, bool>> condition) {
             _converter.AddCondition(condition.Body);
             return this;
         }
@@ -58,14 +58,14 @@ namespace LambdaSharp.DynamoDB.Native.Operations.Internal {
             }
         }
 
-        public async Task<TRecord?> ExecuteReturnOldItemAsync(CancellationToken cancellationToken) {
+        public async Task<TItem?> ExecuteReturnOldItemAsync(CancellationToken cancellationToken) {
             _request.ConditionExpression = _converter.ConvertConditions(_table.Options);
             _request.ReturnValues = ReturnValue.ALL_OLD;
             try {
                 var response = await _table.DynamoClient.DeleteItemAsync(_request);
-                return _table.DeserializeItem<TRecord>(response.Attributes);
+                return _table.DeserializeItem<TItem>(response.Attributes);
             } catch(ConditionalCheckFailedException) {
-                return default(TRecord);
+                return default(TItem);
             }
         }
     }

@@ -43,7 +43,7 @@ namespace Integration.LambdaSharp.DynamoDB.Native {
                 CreateTableAsync().GetAwaiter().GetResult();
             } else {
 
-                // clear out all records
+                // clear out all items
                 DeleteAllItemsAsync().GetAwaiter().GetResult();
             }
         }
@@ -75,7 +75,7 @@ namespace Integration.LambdaSharp.DynamoDB.Native {
 
         private async Task DeleteAllItemsAsync() {
 
-            // scan for all records
+            // scan for all items
             var scanRequest = new ScanRequest {
                 TableName = TableName
             };

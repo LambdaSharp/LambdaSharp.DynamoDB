@@ -38,46 +38,46 @@ namespace LambdaSharp.DynamoDB.Native {
         /// </summary>
         /// <param name="primaryKey">Primary key of the item to retrieve.</param>
         /// <param name="consistentRead">Boolean indicating if the read operation should be performed against the main partition (2x cost compared to eventual consistent read).</param>
-        /// <typeparam name="TRecord">The record type.</typeparam>
-        IDynamoTableGetItem<TRecord> GetItem<TRecord>(DynamoPrimaryKey<TRecord> primaryKey, bool consistentRead = false)
-            where TRecord : class;
+        /// <typeparam name="TItem">The item type.</typeparam>
+        IDynamoTableGetItem<TItem> GetItem<TItem>(DynamoPrimaryKey<TItem> primaryKey, bool consistentRead = false)
+            where TItem : class;
 
         /// <summary>
-        /// Specify the PutItem operation for the given primary key and record. When successful, this operation creates a new row or replaces all attributes of the matching row.
+        /// Specify the PutItem operation for the given primary key and item. When successful, this operation creates a new row or replaces all attributes of the matching row.
         /// </summary>
         /// <param name="primaryKey">Primary key of the item to write.</param>
-        /// <param name="record">The record to write</param>
-        /// <typeparam name="TRecord">The record type.</typeparam>
-        IDynamoTablePutItem<TRecord> PutItem<TRecord>(DynamoPrimaryKey<TRecord> primaryKey, TRecord record)
-            where TRecord : class;
+        /// <param name="item">The item to write</param>
+        /// <typeparam name="TItem">The item type.</typeparam>
+        IDynamoTablePutItem<TItem> PutItem<TItem>(DynamoPrimaryKey<TItem> primaryKey, TItem item)
+            where TItem : class;
 
         /// <summary>
         /// Specify the UpdateItem operation for the given primary key.
         /// </summary>
         /// <param name="primaryKey">Primary key of the item to update.</param>
-        /// <typeparam name="TRecord">The record type.</typeparam>
-        IDynamoTableUpdateItem<TRecord> UpdateItem<TRecord>(DynamoPrimaryKey<TRecord> primaryKey)
-            where TRecord : class;
+        /// <typeparam name="TItem">The item type.</typeparam>
+        IDynamoTableUpdateItem<TItem> UpdateItem<TItem>(DynamoPrimaryKey<TItem> primaryKey)
+            where TItem : class;
 
         /// <summary>
         /// Specify the DeleteItem operation for the given primary key.
         /// </summary>
         /// <param name="primaryKey">Primary key of the item to delete.</param>
-        /// <typeparam name="TRecord">The record type.</typeparam>
-        IDynamoTableDeleteItem<TRecord> DeleteItem<TRecord>(DynamoPrimaryKey<TRecord> primaryKey)
-            where TRecord : class;
+        /// <typeparam name="TItem">The item type.</typeparam>
+        IDynamoTableDeleteItem<TItem> DeleteItem<TItem>(DynamoPrimaryKey<TItem> primaryKey)
+            where TItem : class;
 
         /// <summary>
-        /// Specify the BatchGetItems operation for a list of primary keys that all share the same record type.
+        /// Specify the BatchGetItems operation for a list of primary keys that all share the same item type.
         /// </summary>
         /// <param name="primaryKeys">List of primary keys to retrieve.</param>
         /// <param name="consistentRead">Boolean indicating if the read operations should be performed against the main partition (2x cost compared to eventual consistent read).</param>
-        /// <typeparam name="TRecord">The record type.</typeparam>
-        IDynamoTableBatchGetItems<TRecord> BatchGetItems<TRecord>(IEnumerable<DynamoPrimaryKey<TRecord>> primaryKeys, bool consistentRead = false)
-            where TRecord : class;
+        /// <typeparam name="TItem">The item type.</typeparam>
+        IDynamoTableBatchGetItems<TItem> BatchGetItems<TItem>(IEnumerable<DynamoPrimaryKey<TItem>> primaryKeys, bool consistentRead = false)
+            where TItem : class;
 
         /// <summary>
-        /// Specify the BatchGetItems operation with mixed record types.
+        /// Specify the BatchGetItems operation with mixed item types.
         /// </summary>
         /// <param name="consistentRead">Boolean indicating if the read operations should be performed against the main partition (2x cost compared to eventual consistent read).</param>
         IDynamoTableBatchGetItems BatchGetItems(bool consistentRead = false);
@@ -88,39 +88,39 @@ namespace LambdaSharp.DynamoDB.Native {
         IDynamoTableBatchWriteItems BatchWriteItems();
 
         /// <summary>
-        /// Specify the TransactGetItems operation for a list of primary keys that all share the same record type.
+        /// Specify the TransactGetItems operation for a list of primary keys that all share the same item type.
         /// </summary>
         /// <param name="primaryKeys">List of primary keys to retrieve.</param>
-        /// <typeparam name="TRecord">The record type.</typeparam>
-        IDynamoTableTransactGetItems<TRecord> TransactGetItems<TRecord>(IEnumerable<DynamoPrimaryKey<TRecord>> primaryKeys)
-            where TRecord : class;
+        /// <typeparam name="TItem">The item type.</typeparam>
+        IDynamoTableTransactGetItems<TItem> TransactGetItems<TItem>(IEnumerable<DynamoPrimaryKey<TItem>> primaryKeys)
+            where TItem : class;
 
         /// <summary>
-        /// Specify the TransactGetItems operation with mixed record types.
+        /// Specify the TransactGetItems operation with mixed item types.
         /// </summary>
         IDynamoTableTransactGetItems TransactGetItems();
 
         /// <summary>
-        /// Specify the TransactWriteItems to created, put, update, or delete records in a transaction.
+        /// Specify the TransactWriteItems to created, put, update, or delete items in a transaction.
         /// </summary>
         IDynamoTableTransactWriteItems TransactWriteItems();
 
         /// <summary>
-        /// Specify the Query operation to fetch a list of records of the same type.
+        /// Specify the Query operation to fetch a list of items of the same type.
         /// </summary>
         /// <param name="queryClause">The query clause that specifies the index and sort-key constraints.</param>
-        /// <param name="limit">The maximum number of records to read.</param>
+        /// <param name="limit">The maximum number of items to read.</param>
         /// <param name="scanIndexForward">The direction of index scan.</param>
         /// <param name="consistentRead">Boolean indicating if the read operations should be performed against the main partition (2x cost compared to eventual consistent read).</param>
-        /// <typeparam name="TRecord">The record type.</typeparam>
-        IDynamoTableQuery<TRecord> Query<TRecord>(IDynamoQueryClause<TRecord> queryClause, int limit = int.MaxValue, bool scanIndexForward = true, bool consistentRead = false)
-            where TRecord : class;
+        /// <typeparam name="TItem">The item type.</typeparam>
+        IDynamoTableQuery<TItem> Query<TItem>(IDynamoQueryClause<TItem> queryClause, int limit = int.MaxValue, bool scanIndexForward = true, bool consistentRead = false)
+            where TItem : class;
 
         /// <summary>
-        /// Specify the Query operation to fetch a list of mixed records type.
+        /// Specify the Query operation to fetch a list of mixed items type.
         /// </summary>
         /// <param name="queryClause">The query clause that specifies the index and sort-key constraints.</param>
-        /// <param name="limit">The maximum number of records to read.</param>
+        /// <param name="limit">The maximum number of items to read.</param>
         /// <param name="scanIndexForward">The direction of index scan.</param>
         /// <param name="consistentRead">Boolean indicating if the read operations should be performed against the main partition (2x cost compared to eventual consistent read).</param>
         IDynamoTableQuery Query(IDynamoQueryClause queryClause, int limit = int.MaxValue, bool scanIndexForward = true, bool consistentRead = false);
@@ -135,23 +135,23 @@ namespace LambdaSharp.DynamoDB.Native {
         /// <param name="primaryKey">Primary key of the item to retrieve.</param>
         /// <param name="consistentRead">Boolean indicating if the read operation should be performed against the main partition (2x cost compared to eventual consistent read).</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <typeparam name="TRecord">The record type.</typeparam>
-        Task<TRecord?> GetItemAsync<TRecord>(DynamoPrimaryKey<TRecord> primaryKey, bool consistentRead = false, CancellationToken cancellationToken = default)
-            where TRecord : class
+        /// <typeparam name="TItem">The item type.</typeparam>
+        Task<TItem?> GetItemAsync<TItem>(DynamoPrimaryKey<TItem> primaryKey, bool consistentRead = false, CancellationToken cancellationToken = default)
+            where TItem : class
             => GetItem(primaryKey, consistentRead).ExecuteAsync(cancellationToken);
 
         /// <summary>
-        /// Performs a PutItem operation that creates/replaces the row matched by the given primary key with the given record.
+        /// Performs a PutItem operation that creates/replaces the row matched by the given primary key with the given item.
         ///
-        /// This method is the same: <c>PuItem(primaryKey, record).ExecuteAsync(cancellationToken)</c>.
+        /// This method is the same: <c>PuItem(primaryKey, item).ExecuteAsync(cancellationToken)</c>.
         /// </summary>
-        /// <param name="record">The record to write</param>
+        /// <param name="item">The item to write</param>
         /// <param name="primaryKey">Primary key of the item to write.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <typeparam name="TRecord">The record type.</typeparam>
-        Task<bool> PutItemAsync<TRecord>(DynamoPrimaryKey<TRecord> primaryKey, TRecord record, CancellationToken cancellationToken = default)
-            where TRecord : class
-            => PutItem(primaryKey, record).ExecuteAsync(cancellationToken);
+        /// <typeparam name="TItem">The item type.</typeparam>
+        Task<bool> PutItemAsync<TItem>(DynamoPrimaryKey<TItem> primaryKey, TItem item, CancellationToken cancellationToken = default)
+            where TItem : class
+            => PutItem(primaryKey, item).ExecuteAsync(cancellationToken);
 
         /// <summary>
         /// Performs a DeleteItem operation to delete the given primary key.
@@ -160,9 +160,9 @@ namespace LambdaSharp.DynamoDB.Native {
         /// </summary>
         /// <param name="primaryKey">Primary key of the item to delete.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <typeparam name="TRecord">The record type.</typeparam>
-        Task<bool> DeleteItemAsync<TRecord>(DynamoPrimaryKey<TRecord> primaryKey, CancellationToken cancellationToken = default)
-            where TRecord : class
+        /// <typeparam name="TItem">The item type.</typeparam>
+        Task<bool> DeleteItemAsync<TItem>(DynamoPrimaryKey<TItem> primaryKey, CancellationToken cancellationToken = default)
+            where TItem : class
             => DeleteItem(primaryKey).ExecuteAsync(cancellationToken);
 
         /// <summary>
@@ -173,8 +173,9 @@ namespace LambdaSharp.DynamoDB.Native {
         /// <param name="queryClause">The query clause that specifies the index and sort-key constraints.</param>
         /// <param name="consistentRead">Boolean indicating if the read operations should be performed against the main partition (2x cost compared to eventual consistent read).</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <typeparam name="TRecord">The record type.</typeparam>
-        async Task<TRecord?> QuerySingleAsync<TRecord>(IDynamoQueryClause<TRecord> queryClause, bool consistentRead = false, CancellationToken cancellationToken = default)
-            where TRecord : class
-            => (await Query(queryClause, limit: 1, consistentRead).ExecuteFetchAllAttributesAsync(cancellationToken)).FirstOrDefault();    }
+        /// <typeparam name="TItem">The item type.</typeparam>
+        async Task<TItem?> QuerySingleAsync<TItem>(IDynamoQueryClause<TItem> queryClause, bool consistentRead = false, CancellationToken cancellationToken = default)
+            where TItem : class
+            => (await Query(queryClause, limit: 1, consistentRead).ExecuteFetchAllAttributesAsync(cancellationToken)).FirstOrDefault();
+    }
 }

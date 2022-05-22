@@ -77,56 +77,56 @@ namespace LambdaSharp.DynamoDB.Native.Query {
     /// <summary>
     /// Interface for specifying the sort key (PK) constraint for a DynamoDB query.
     /// </summary>
-    public interface IDynamoQuerySortKeyConstraint<TRecord> where TRecord : class {
+    public interface IDynamoQuerySortKeyConstraint<TItem> where TItem : class {
 
         //--- Methods ---
 
         /// <summary>
         /// Skip adding sort key (SK) constraint.
         /// </summary>
-        IDynamoQueryClause<TRecord> WhereSKMatchesAny();
+        IDynamoQueryClause<TItem> WhereSKMatchesAny();
 
         /// <summary>
         /// Add sort key (SK) 'equals' constraint.
         /// </summary>
         /// <param name="skValue">Value to compare sort key (SK) to.</param>
-        IDynamoQueryClause<TRecord> WhereSKEquals(string skValue);
+        IDynamoQueryClause<TItem> WhereSKEquals(string skValue);
 
         /// <summary>
         /// Add sort key (SK) 'greater than' constraint.
         /// </summary>
         /// <param name="skValue">Value to compare sort key (SK) to.</param>
-        IDynamoQueryClause<TRecord> WhereSKIsGreaterThan(string skValue);
+        IDynamoQueryClause<TItem> WhereSKIsGreaterThan(string skValue);
 
         /// <summary>
         /// Add sort key (SK) 'greater than or equal' constraint.
         /// </summary>
         /// <param name="skValue">Value to compare sort key (SK) to.</param>
-        IDynamoQueryClause<TRecord> WhereSKIsGreaterThanOrEquals(string skValue);
+        IDynamoQueryClause<TItem> WhereSKIsGreaterThanOrEquals(string skValue);
 
         /// <summary>
         /// Add sort key (SK) 'less then' constraint.
         /// </summary>
         /// <param name="skValue">Value to compare sort key (SK) to.</param>
-        IDynamoQueryClause<TRecord> WhereSKIsLessThan(string skValue);
+        IDynamoQueryClause<TItem> WhereSKIsLessThan(string skValue);
 
         /// <summary>
         /// Add sort key (SK) 'less than or equal' constraint.
         /// </summary>
         /// <param name="skValue">Value to compare sort key (SK) to.</param>
-        IDynamoQueryClause<TRecord> WhereSKIsLessThanOrEquals(string skValue);
+        IDynamoQueryClause<TItem> WhereSKIsLessThanOrEquals(string skValue);
 
         /// <summary>
         /// Add sort key (SK) must be 'between two values' constraint.
         /// </summary>
         /// <param name="skLowerBound">Lower bound value for sort key (SK).</param>
         /// <param name="skUpperBound">Upper bound value for sort key (SK).</param>
-        IDynamoQueryClause<TRecord> WhereSKIsBetween(string skLowerBound, string skUpperBound);
+        IDynamoQueryClause<TItem> WhereSKIsBetween(string skLowerBound, string skUpperBound);
 
         /// <summary>
         /// Add sort key (SK) must begins with constraint.
         /// </summary>
         /// <param name="skValuePrefix">Prefix for sort key (SK).</param>
-        IDynamoQueryClause<TRecord> WhereSKBeginsWith(string skValuePrefix);
+        IDynamoQueryClause<TItem> WhereSKBeginsWith(string skValuePrefix);
     }
 }

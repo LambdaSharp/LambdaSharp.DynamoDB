@@ -48,7 +48,7 @@ public class ThriftBooksDataAccessClient : IThriftBooksDataAccess {
             EmailAddress = customer.EmailAddress
         };
 
-        // check if both records can be written
+        // check if both items can be written
         var success = await Table.TransactWriteItems()
             .BeginPutItem(customer.GetPrimaryKey(), customer)
                 .WithConditionItemDoesNotExist()
@@ -64,18 +64,18 @@ public class ThriftBooksDataAccessClient : IThriftBooksDataAccess {
 
     public Task AddOrUpdateAddressAsync(string customerUsername, AddressRecord address, CancellationToken cancellationToken) {
         return Table.UpdateItem(DataModel.CustomerRecordPrimaryKey(customerUsername))
-            .Set(record => record.Addresses![address.Label!], address)
+            .Set(item => item.Addresses![address.Label!], address)
             .ExecuteAsync(cancellationToken);
     }
 
     public async Task<(CustomerRecord Customer, IEnumerable<OrderRecord> Orders)> GetCustomerWithMostRecentOrdersAsync(string customerUsername, int limit, CancellationToken cancellationToken) {
 
-        // query all records under the customer name, which include the order records as well
-        var records = await Table.Query(DataModel.SelectCustomerAndOrders(customerUsername), limit: 11, scanIndexForward: false)
+        // query all items under the customer name, which include the order items as well
+        var items = await Table.Query(DataModel.SelectCustomerAndOrders(customerUsername), limit: 11, scanIndexForward: false)
             .ExecuteAsync(cancellationToken: cancellationToken);
 
-        // split returned records by type
-        return (Customer: records.OfType<CustomerRecord>().Single(), Orders: records.OfType<OrderRecord>().ToList());
+        // split returned items by type
+        return (Customer: items.OfType<CustomerRecord>().Single(), Orders: items.OfType<OrderRecord>().ToList());
     }
 
     public async Task SaveOrderAsync(OrderRecord order, IEnumerable<OrderItemRecord> orderItems, CancellationToken cancellationToken) {
@@ -113,7 +113,7 @@ public class ThriftBooksDataAccessClient : IThriftBooksDataAccess {
 
         // resolve order ID to primary key by querying the global secondary index
         var order = (await Table.Query(DataModel.SelectOrders(orderId))
-            .Get(record => record.CustomerUsername)
+            .Get(item => item.CustomerUsername)
             .ExecuteAsync(cancellationToken)
         ).FirstOrDefault();
         ArgumentAssertException.Assert(order is not null);
@@ -122,17 +122,17 @@ public class ThriftBooksDataAccessClient : IThriftBooksDataAccess {
 
         // update order with state
         await Table.UpdateItem(DataModel.OrderRecordPrimaryKey(order.CustomerUsername, order.OrderId))
-            .Set(record => record.Status, orderStatus)
+            .Set(item => item.Status, orderStatus)
             .ExecuteAsync(cancellationToken);
     }
 
     public async Task<(OrderRecord Order, IEnumerable<OrderItemRecord> Items)> GetOrderWithOrderItemsAsync(string orderId, CancellationToken cancellationToken) {
 
-        // query all records under the order ID, which include the order item records as well
-        var records = await Table.Query(DataModel.SelectOrderAndOrderItems(orderId))
+        // query all items under the order ID, which include the order item items as well
+        var items = await Table.Query(DataModel.SelectOrderAndOrderItems(orderId))
             .ExecuteAsync(cancellationToken);
 
-        // split returned records by type
-        return (Order: records.OfType<OrderRecord>().Single(), Items: records.OfType<OrderItemRecord>().ToList());
+        // split returned items by type
+        return (Order: items.OfType<OrderRecord>().Single(), Items: items.OfType<OrderItemRecord>().ToList());
     }
 }

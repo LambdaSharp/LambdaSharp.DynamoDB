@@ -28,8 +28,8 @@ namespace LambdaSharp.DynamoDB.Native.Operations {
     /// <summary>
     /// Interface to specify a UpdateItem operation.
     /// </summary>
-    /// <typeparam name="TRecord">The record type.</typeparam>
-    public interface IDynamoTableUpdateItem<TRecord> where TRecord : class {
+    /// <typeparam name="TItem">The item type.</typeparam>
+    public interface IDynamoTableUpdateItem<TItem> where TItem : class {
 
         //--- Methods ---
 
@@ -37,221 +37,221 @@ namespace LambdaSharp.DynamoDB.Native.Operations {
         /// Add condition for UpdateItem operation.
         /// </summary>
         /// <param name="condition">A lambda predicate representing the DynamoDB condition expression.</param>
-        IDynamoTableUpdateItem<TRecord> WithCondition(Expression<Func<TRecord, bool>> condition);
+        IDynamoTableUpdateItem<TItem> WithCondition(Expression<Func<TItem, bool>> condition);
 
         /// <summary>
         /// Add condition that item exists for UpdateItem operation.
         /// </summary>
-        IDynamoTableUpdateItem<TRecord> WithConditionItemExists() => WithCondition(record => DynamoCondition.Exists(record));
+        IDynamoTableUpdateItem<TItem> WithConditionItemExists() => WithCondition(item => DynamoCondition.Exists(item));
 
         /// <summary>
         /// Add condition that item does not exist for UpdateItem operation.
         /// </summary>
-        IDynamoTableUpdateItem<TRecord> WithConditionItemDoesNotExist() => WithCondition(record => DynamoCondition.DoesNotExist(record));
+        IDynamoTableUpdateItem<TItem> WithConditionItemDoesNotExist() => WithCondition(item => DynamoCondition.DoesNotExist(item));
 
         // *** `SET Foo.Bar = :value` action ***
 
         /// <summary>
-        /// Set a record property.
+        /// Set a item property.
         /// </summary>
-        /// <param name="attribute">A lambda expression that selects the target record property.</param>
+        /// <param name="attribute">A lambda expression that selects the target item property.</param>
         /// <param name="value">The value to set.</param>
         /// <typeparam name="T">The property type.</typeparam>
-        IDynamoTableUpdateItem<TRecord> Set<T>(Expression<Func<TRecord, T>> attribute, T value);
+        IDynamoTableUpdateItem<TItem> Set<T>(Expression<Func<TItem, T>> attribute, T value);
 
         /// <summary>
-        /// Set a record property.
+        /// Set a item property.
         /// </summary>
-        /// <param name="attribute">A lambda expression that selects the target record property.</param>
+        /// <param name="attribute">A lambda expression that selects the target item property.</param>
         /// <param name="value">The value to set.</param>
         /// <typeparam name="T">The property type.</typeparam>
-        IDynamoTableUpdateItem<TRecord> Set<T>(Expression<Func<TRecord, ISet<T>>> attribute, ISet<T> value);
+        IDynamoTableUpdateItem<TItem> Set<T>(Expression<Func<TItem, ISet<T>>> attribute, ISet<T> value);
 
         /// <summary>
-        /// Set a record property.
+        /// Set a item property.
         /// </summary>
-        /// <param name="attribute">A lambda expression that selects the target record property.</param>
+        /// <param name="attribute">A lambda expression that selects the target item property.</param>
         /// <param name="value">The value to set.</param>
         /// <typeparam name="T">The property type.</typeparam>
-        IDynamoTableUpdateItem<TRecord> Set<T>(Expression<Func<TRecord, IDictionary<string, T>>> attribute, IDictionary<string, T> value);
+        IDynamoTableUpdateItem<TItem> Set<T>(Expression<Func<TItem, IDictionary<string, T>>> attribute, IDictionary<string, T> value);
 
         /// <summary>
-        /// Set a record property.
+        /// Set a item property.
         /// </summary>
-        /// <param name="attribute">A lambda expression that selects the target record property.</param>
+        /// <param name="attribute">A lambda expression that selects the target item property.</param>
         /// <param name="value">The value to set.</param>
         /// <typeparam name="T">The property type.</typeparam>
-        IDynamoTableUpdateItem<TRecord> Set<T>(Expression<Func<TRecord, IList<T>>> attribute, IList<T> value);
+        IDynamoTableUpdateItem<TItem> Set<T>(Expression<Func<TItem, IList<T>>> attribute, IList<T> value);
 
         /// <summary>
-        /// Set a record property.
+        /// Set a item property.
         /// </summary>
-        /// <param name="attribute">A lambda expression that selects the target record property.</param>
+        /// <param name="attribute">A lambda expression that selects the target item property.</param>
         /// <param name="value">The value to set.</param>
         /// <typeparam name="T">The property type.</typeparam>
-        IDynamoTableUpdateItem<TRecord> Set<T>(Expression<Func<TRecord, T>> attribute, Expression<Func<TRecord, T>> value);
+        IDynamoTableUpdateItem<TItem> Set<T>(Expression<Func<TItem, T>> attribute, Expression<Func<TItem, T>> value);
 
         /// <summary>
-        /// Set a record property.
+        /// Set a item property.
         /// </summary>
-        /// <param name="attribute">A lambda expression that selects the target record property.</param>
+        /// <param name="attribute">A lambda expression that selects the target item property.</param>
         /// <param name="value">The value to set.</param>
         /// <typeparam name="T">The property type.</typeparam>
-        IDynamoTableUpdateItem<TRecord> Set<T>(Expression<Func<TRecord, ISet<T>>> attribute, Expression<Func<TRecord, ISet<T>>> value);
+        IDynamoTableUpdateItem<TItem> Set<T>(Expression<Func<TItem, ISet<T>>> attribute, Expression<Func<TItem, ISet<T>>> value);
 
         /// <summary>
-        /// Set a record property.
+        /// Set a item property.
         /// </summary>
-        /// <param name="attribute">A lambda expression that selects the target record property.</param>
+        /// <param name="attribute">A lambda expression that selects the target item property.</param>
         /// <param name="value">The value to set.</param>
         /// <typeparam name="T">The property type.</typeparam>
-        IDynamoTableUpdateItem<TRecord> Set<T>(Expression<Func<TRecord, IDictionary<string, T>>> attribute, Expression<Func<TRecord, IDictionary<string, T>>> value);
+        IDynamoTableUpdateItem<TItem> Set<T>(Expression<Func<TItem, IDictionary<string, T>>> attribute, Expression<Func<TItem, IDictionary<string, T>>> value);
 
         /// <summary>
-        /// Set a record property.
+        /// Set a item property.
         /// </summary>
-        /// <param name="attribute">A lambda expression that selects the target record property.</param>
+        /// <param name="attribute">A lambda expression that selects the target item property.</param>
         /// <param name="value">The value to set.</param>
         /// <typeparam name="T">The property type.</typeparam>
-        IDynamoTableUpdateItem<TRecord> Set<T>(Expression<Func<TRecord, IList<T>>> attribute, Expression<Func<TRecord, IList<T>>> value);
+        IDynamoTableUpdateItem<TItem> Set<T>(Expression<Func<TItem, IList<T>>> attribute, Expression<Func<TItem, IList<T>>> value);
 
         /// <summary>
         /// Set the value of a DynamoDB item attribute. Used for storing attributes used by local/global secondary indices.
         /// </summary>
         /// <param name="key">Name of attribute.</param>
         /// <param name="value">Value of attribute.</param>
-        IDynamoTableUpdateItem<TRecord> Set(string key, AttributeValue value);
+        IDynamoTableUpdateItem<TItem> Set(string key, AttributeValue value);
 
         // *** `REMOVE Brand` action ***
 
         /// <summary>
-        /// Remove a record property.
+        /// Remove a item property.
         /// </summary>
-        /// <param name="attribute">A lambda expression that selects the target record property.</param>
+        /// <param name="attribute">A lambda expression that selects the target item property.</param>
         /// <typeparam name="T">The property type.</typeparam>
-        IDynamoTableUpdateItem<TRecord> Remove<T>(Expression<Func<TRecord, T>> attribute);
+        IDynamoTableUpdateItem<TItem> Remove<T>(Expression<Func<TItem, T>> attribute);
 
         /// <summary>
         /// Remove a DynamoDB item attribute. Used for removing attributes used by local/global secondary indices.
         /// </summary>
         /// <param name="key">Name of attribute.</param>
-        IDynamoTableUpdateItem<TRecord> Remove(string key);
+        IDynamoTableUpdateItem<TItem> Remove(string key);
 
         // *** `ADD Color :c` action ***
 
         /// <summary>
-        /// Add a value to a record property.
+        /// Add a value to a item property.
         /// </summary>
-        /// <param name="attribute">A lambda expression that selects the target record property.</param>
+        /// <param name="attribute">A lambda expression that selects the target item property.</param>
         /// <param name="value">Value to add.</param>
-        IDynamoTableUpdateItem<TRecord> Add(Expression<Func<TRecord, int>> attribute, int value);
+        IDynamoTableUpdateItem<TItem> Add(Expression<Func<TItem, int>> attribute, int value);
 
         /// <summary>
-        /// Add a value to a record property.
+        /// Add a value to a item property.
         /// </summary>
-        /// <param name="attribute">A lambda expression that selects the target record property.</param>
+        /// <param name="attribute">A lambda expression that selects the target item property.</param>
         /// <param name="value">Value to add.</param>
-        IDynamoTableUpdateItem<TRecord> Add(Expression<Func<TRecord, long>> attribute, long value);
+        IDynamoTableUpdateItem<TItem> Add(Expression<Func<TItem, long>> attribute, long value);
 
         /// <summary>
-        /// Add a value to a record property.
+        /// Add a value to a item property.
         /// </summary>
-        /// <param name="attribute">A lambda expression that selects the target record property.</param>
+        /// <param name="attribute">A lambda expression that selects the target item property.</param>
         /// <param name="value">Value to add.</param>
-        IDynamoTableUpdateItem<TRecord> Add(Expression<Func<TRecord, double>> attribute, double value);
+        IDynamoTableUpdateItem<TItem> Add(Expression<Func<TItem, double>> attribute, double value);
 
         /// <summary>
-        /// Add a value to a record property.
+        /// Add a value to a item property.
         /// </summary>
-        /// <param name="attribute">A lambda expression that selects the target record property.</param>
+        /// <param name="attribute">A lambda expression that selects the target item property.</param>
         /// <param name="value">Value to add.</param>
-        IDynamoTableUpdateItem<TRecord> Add(Expression<Func<TRecord, decimal>> attribute, decimal value);
+        IDynamoTableUpdateItem<TItem> Add(Expression<Func<TItem, decimal>> attribute, decimal value);
 
         /// <summary>
-        /// Add one or more values to a record set property.
+        /// Add one or more values to a item set property.
         /// </summary>
-        /// <param name="attribute">A lambda expression that selects the target record set property.</param>
+        /// <param name="attribute">A lambda expression that selects the target item set property.</param>
         /// <param name="values">Values to add.</param>
-        IDynamoTableUpdateItem<TRecord> Add(Expression<Func<TRecord, ISet<string>>> attribute, IEnumerable<string> values);
+        IDynamoTableUpdateItem<TItem> Add(Expression<Func<TItem, ISet<string>>> attribute, IEnumerable<string> values);
 
         /// <summary>
-        /// Add one or more values to a record set property.
+        /// Add one or more values to a item set property.
         /// </summary>
-        /// <param name="attribute">A lambda expression that selects the target record set property.</param>
+        /// <param name="attribute">A lambda expression that selects the target item set property.</param>
         /// <param name="values">Values to add.</param>
-        IDynamoTableUpdateItem<TRecord> Add(Expression<Func<TRecord, ISet<byte[]>>> attribute, IEnumerable<byte[]> values);
+        IDynamoTableUpdateItem<TItem> Add(Expression<Func<TItem, ISet<byte[]>>> attribute, IEnumerable<byte[]> values);
 
         /// <summary>
-        /// Add one or more values to a record set property.
+        /// Add one or more values to a item set property.
         /// </summary>
-        /// <param name="attribute">A lambda expression that selects the target record set property.</param>
+        /// <param name="attribute">A lambda expression that selects the target item set property.</param>
         /// <param name="values">Values to add.</param>
-        IDynamoTableUpdateItem<TRecord> Add(Expression<Func<TRecord, ISet<int>>> attribute, IEnumerable<int> values);
+        IDynamoTableUpdateItem<TItem> Add(Expression<Func<TItem, ISet<int>>> attribute, IEnumerable<int> values);
 
         /// <summary>
-        /// Add one or more values to a record set property.
+        /// Add one or more values to a item set property.
         /// </summary>
-        /// <param name="attribute">A lambda expression that selects the target record set property.</param>
+        /// <param name="attribute">A lambda expression that selects the target item set property.</param>
         /// <param name="values">Values to add.</param>
-        IDynamoTableUpdateItem<TRecord> Add(Expression<Func<TRecord, ISet<long>>> attribute, IEnumerable<long> values);
+        IDynamoTableUpdateItem<TItem> Add(Expression<Func<TItem, ISet<long>>> attribute, IEnumerable<long> values);
 
         /// <summary>
-        /// Add one or more values to a record set property.
+        /// Add one or more values to a item set property.
         /// </summary>
-        /// <param name="attribute">A lambda expression that selects the target record set property.</param>
+        /// <param name="attribute">A lambda expression that selects the target item set property.</param>
         /// <param name="values">Values to add.</param>
-        IDynamoTableUpdateItem<TRecord> Add(Expression<Func<TRecord, ISet<double>>> attribute, IEnumerable<double> values);
+        IDynamoTableUpdateItem<TItem> Add(Expression<Func<TItem, ISet<double>>> attribute, IEnumerable<double> values);
 
         /// <summary>
-        /// Add one or more values to a record set property.
+        /// Add one or more values to a item set property.
         /// </summary>
-        /// <param name="attribute">A lambda expression that selects the target record set property.</param>
+        /// <param name="attribute">A lambda expression that selects the target item set property.</param>
         /// <param name="values">Values to add.</param>
-        IDynamoTableUpdateItem<TRecord> Add(Expression<Func<TRecord, ISet<decimal>>> attribute, IEnumerable<decimal> values);
+        IDynamoTableUpdateItem<TItem> Add(Expression<Func<TItem, ISet<decimal>>> attribute, IEnumerable<decimal> values);
 
         // *** `DELETE Color :p` action ***
 
         /// <summary>
-        /// Delete one or more values from a record set property.
+        /// Delete one or more values from a item set property.
         /// </summary>
-        /// <param name="attribute">A lambda expression that selects the target record set property.</param>
+        /// <param name="attribute">A lambda expression that selects the target item set property.</param>
         /// <param name="values">Values to delete.</param>
-        IDynamoTableUpdateItem<TRecord> Delete(Expression<Func<TRecord, ISet<string>>> attribute, IEnumerable<string> values);
+        IDynamoTableUpdateItem<TItem> Delete(Expression<Func<TItem, ISet<string>>> attribute, IEnumerable<string> values);
 
         /// <summary>
-        /// Delete one or more values from a record set property.
+        /// Delete one or more values from a item set property.
         /// </summary>
-        /// <param name="attribute">A lambda expression that selects the target record set property.</param>
+        /// <param name="attribute">A lambda expression that selects the target item set property.</param>
         /// <param name="values">Values to delete.</param>
-        IDynamoTableUpdateItem<TRecord> Delete(Expression<Func<TRecord, ISet<byte[]>>> attribute, IEnumerable<byte[]> values);
+        IDynamoTableUpdateItem<TItem> Delete(Expression<Func<TItem, ISet<byte[]>>> attribute, IEnumerable<byte[]> values);
 
         /// <summary>
-        /// Delete one or more values from a record set property.
+        /// Delete one or more values from a item set property.
         /// </summary>
-        /// <param name="attribute">A lambda expression that selects the target record set property.</param>
+        /// <param name="attribute">A lambda expression that selects the target item set property.</param>
         /// <param name="values">Values to delete.</param>
-        IDynamoTableUpdateItem<TRecord> Delete(Expression<Func<TRecord, ISet<int>>> attribute, IEnumerable<int> values);
+        IDynamoTableUpdateItem<TItem> Delete(Expression<Func<TItem, ISet<int>>> attribute, IEnumerable<int> values);
 
         /// <summary>
-        /// Delete one or more values from a record set property.
+        /// Delete one or more values from a item set property.
         /// </summary>
-        /// <param name="attribute">A lambda expression that selects the target record set property.</param>
+        /// <param name="attribute">A lambda expression that selects the target item set property.</param>
         /// <param name="values">Values to delete.</param>
-        IDynamoTableUpdateItem<TRecord> Delete(Expression<Func<TRecord, ISet<long>>> attribute, IEnumerable<long> values);
+        IDynamoTableUpdateItem<TItem> Delete(Expression<Func<TItem, ISet<long>>> attribute, IEnumerable<long> values);
 
         /// <summary>
-        /// Delete one or more values from a record set property.
+        /// Delete one or more values from a item set property.
         /// </summary>
-        /// <param name="attribute">A lambda expression that selects the target record set property.</param>
+        /// <param name="attribute">A lambda expression that selects the target item set property.</param>
         /// <param name="values">Values to delete.</param>
-        IDynamoTableUpdateItem<TRecord> Delete(Expression<Func<TRecord, ISet<double>>> attribute, IEnumerable<double> values);
+        IDynamoTableUpdateItem<TItem> Delete(Expression<Func<TItem, ISet<double>>> attribute, IEnumerable<double> values);
 
         /// <summary>
-        /// Delete one or more values from a record set property.
+        /// Delete one or more values from a item set property.
         /// </summary>
-        /// <param name="attribute">A lambda expression that selects the target record set property.</param>
+        /// <param name="attribute">A lambda expression that selects the target item set property.</param>
         /// <param name="values">Values to delete.</param>
-        IDynamoTableUpdateItem<TRecord> Delete(Expression<Func<TRecord, ISet<decimal>>> attribute, IEnumerable<decimal> values);
+        IDynamoTableUpdateItem<TItem> Delete(Expression<Func<TItem, ISet<decimal>>> attribute, IEnumerable<decimal> values);
 
         // *** Execute UpdateItem ***
 
@@ -266,15 +266,15 @@ namespace LambdaSharp.DynamoDB.Native.Operations {
         /// Execute the UpdateItem operation.
         /// </summary>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>Updated record when found and condition is met. <c>null</c>, otherwise.</returns>
-        Task<TRecord?> ExecuteReturnNewItemAsync(CancellationToken cancellationToken);
+        /// <returns>Updated item when found and condition is met. <c>null</c>, otherwise.</returns>
+        Task<TItem?> ExecuteReturnNewItemAsync(CancellationToken cancellationToken);
 
         /// <summary>
         /// Execute the UpdateItem operation.
         /// </summary>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>Old record when found and condition is met. <c>null</c>, otherwise.</returns>
-        Task<TRecord?> ExecuteReturnOldItemAsync(CancellationToken cancellationToken);
+        /// <returns>Old item when found and condition is met. <c>null</c>, otherwise.</returns>
+        Task<TItem?> ExecuteReturnOldItemAsync(CancellationToken cancellationToken);
 
         //--- Default Methods ---
 
@@ -283,7 +283,7 @@ namespace LambdaSharp.DynamoDB.Native.Operations {
         /// </summary>
         /// <param name="key">Name of attribute.</param>
         /// <param name="value">Value of attribute.</param>
-        IDynamoTableUpdateItem<TRecord> Set(string key, string value)
+        IDynamoTableUpdateItem<TItem> Set(string key, string value)
             => Set(key, new AttributeValue(value));
     }
 }

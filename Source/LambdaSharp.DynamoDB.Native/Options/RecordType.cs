@@ -22,7 +22,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace LambdaSharp.DynamoDB.Native.Options {
 
     // TODO (2021-07-11, bjorg): not ready to be public
-    internal class RecordType {
+    internal class ItemType {
 
         //--- Fields ---
         private Type? _type;
@@ -44,9 +44,9 @@ namespace LambdaSharp.DynamoDB.Native.Options {
     }
 
     // TODO (2021-07-11, bjorg): not ready to be public
-    internal class RecordType<TRecord> : RecordType where TRecord : class {
+    internal class ItemType<TItem> : ItemType where TItem : class {
 
         //--- Constructors ---
-        public RecordType( ) => Type = typeof(TRecord);
+        public ItemType( ) => Type = typeof(TItem);
     }
 }

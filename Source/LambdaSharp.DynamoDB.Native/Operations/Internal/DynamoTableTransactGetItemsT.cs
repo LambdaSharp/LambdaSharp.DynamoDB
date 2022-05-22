@@ -26,8 +26,8 @@ using LambdaSharp.DynamoDB.Native.Internal;
 
 namespace LambdaSharp.DynamoDB.Native.Operations.Internal {
 
-    internal sealed class DynamoTableTransactGetItems<TRecord> : IDynamoTableTransactGetItems<TRecord>
-        where TRecord : class
+    internal sealed class DynamoTableTransactGetItems<TItem> : IDynamoTableTransactGetItems<TItem>
+        where TItem : class
 
     {
 
@@ -46,14 +46,14 @@ namespace LambdaSharp.DynamoDB.Native.Operations.Internal {
         }
 
         //--- Methods ---
-        public IDynamoTableTransactGetItems<TRecord> Get<T>(System.Linq.Expressions.Expression<Func<TRecord, T>> attribute) {
+        public IDynamoTableTransactGetItems<TItem> Get<T>(System.Linq.Expressions.Expression<Func<TItem, T>> attribute) {
             foreach(var converter in _converters) {
                 converter.AddProjection(attribute.Body);
             }
             return this;
         }
 
-        public async Task<(bool Success, IEnumerable<TRecord> Items)> TryExecuteAsync(int maxAttempts = 5, CancellationToken cancellationToken = default) {
+        public async Task<(bool Success, IEnumerable<TItem> Items)> TryExecuteAsync(int maxAttempts = 5, CancellationToken cancellationToken = default) {
              if(!_request.TransactItems.Any()) {
                 throw new ArgumentException("primary keys cannot be empty");
             }
@@ -66,19 +66,19 @@ namespace LambdaSharp.DynamoDB.Native.Operations.Internal {
 
             // perform transaction
             try {
-                var result = new List<TRecord>();
+                var result = new List<TItem>();
                 var response = await _table.DynamoClient.TransactGetItemsAsync(_request, cancellationToken);
                 foreach(var itemResponse in response.Responses) {
-                    var record = _table.DeserializeItem<TRecord>(itemResponse.Item);
-                    if(!(record is null)) {
-                        result.Add(record);
+                    var item = _table.DeserializeItem<TItem>(itemResponse.Item);
+                    if(!(item is null)) {
+                        result.Add(item);
                     }
                 }
                 return (Success: true, Items: result);
             } catch(TransactionCanceledException) {
 
                 // transaction failed
-                return (Success: false, Items: Enumerable.Empty<TRecord>());
+                return (Success: false, Items: Enumerable.Empty<TItem>());
             }
        }
     }

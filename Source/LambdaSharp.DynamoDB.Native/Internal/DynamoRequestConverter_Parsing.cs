@@ -32,7 +32,7 @@ namespace LambdaSharp.DynamoDB.Native.Internal {
         //--- Methods ---
 
         /// <summary>
-        /// Parses a LINQ expression to as a record attribute path. Max depth supported by DynamoDB is 32 attributes.
+        /// Parses a LINQ expression to as a item attribute path. Max depth supported by DynamoDB is 32 attributes.
         /// </summary>
         /// <code>
         /// ATTRIBUTE-PATH ::=

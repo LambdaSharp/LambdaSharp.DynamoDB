@@ -34,17 +34,17 @@ namespace LambdaSharp.DynamoDB.Native {
         //--- Properties ---
 
         /// <summary>
-        /// Get/set serialization options for records.
+        /// Get/set serialization options for items.
         /// </summary>
         public DynamoSerializerOptions SerializerOptions { get; set; } = new DynamoSerializerOptions();
 
         /// <summary>
-        /// Get/set expected type namespace for stored record type names.
+        /// Get/set expected type namespace for stored item type names.
         /// </summary>
         public string? ExpectedTypeNamespace { get; set; }
 
         // TODO (2021-07-11, bjorg): not ready to be public
-        internal List<RecordType> RecordTypes { get; set; } = new List<RecordType>();
+        internal List<ItemType> ItemTypes { get; set; } = new List<ItemType>();
 
         //--- Methods ---
         internal string GetShortTypeName(Type type) {
@@ -54,9 +54,9 @@ namespace LambdaSharp.DynamoDB.Native {
             var result = type.FullName ?? throw new ArgumentException("missing type name", nameof(type));
 
             // check if a custom short type name is defined
-            var recordType = RecordTypes.FirstOrDefault(recordType => recordType.Type == type);
-            if(!(recordType is null) && !(recordType.ShortTypeName is null)) {
-                return recordType.ShortTypeName;
+            var itemType = ItemTypes.FirstOrDefault(itemType => itemType.Type == type);
+            if(!(itemType is null) && !(itemType.ShortTypeName is null)) {
+                return itemType.ShortTypeName;
             }
 
             // check if the type name has an expected prefix
@@ -72,9 +72,9 @@ namespace LambdaSharp.DynamoDB.Native {
         internal string GetFullTypeName(string typeName) {
 
             // check if a type name corresponds to a custom short type name
-            var recordType = RecordTypes.FirstOrDefault(recordType => recordType.ShortTypeName == typeName);
-            if(!(recordType is null) && !(recordType.ShortTypeName is null)) {
-                return recordType.FullTypeName;
+            var itemType = ItemTypes.FirstOrDefault(itemType => itemType.ShortTypeName == typeName);
+            if(!(itemType is null) && !(itemType.ShortTypeName is null)) {
+                return itemType.FullTypeName;
             }
 
             // check if the type name shorted an expected prefix
@@ -84,11 +84,11 @@ namespace LambdaSharp.DynamoDB.Native {
             return typeName;
         }
 
-        internal Type? GetRecordType(string typeName) {
+        internal Type? GetItemType(string typeName) {
             var fullTypeName = GetFullTypeName(typeName);
 
             // find type that matches full typename
-            return RecordTypes.FirstOrDefault(recordType => recordType.Type.FullName == fullTypeName)?.Type;
+            return ItemTypes.FirstOrDefault(itemType => itemType.Type.FullName == fullTypeName)?.Type;
         }
     }
 }

@@ -28,8 +28,8 @@ using LambdaSharp.DynamoDB.Native.Internal;
 
 namespace LambdaSharp.DynamoDB.Native.Operations.Internal {
 
-    internal sealed class DynamoTableBatchGetItems<TRecord> : IDynamoTableBatchGetItems<TRecord>
-        where TRecord : class
+    internal sealed class DynamoTableBatchGetItems<TItem> : IDynamoTableBatchGetItems<TItem>
+        where TItem : class
     {
 
         //--- Constants ---
@@ -48,26 +48,26 @@ namespace LambdaSharp.DynamoDB.Native.Operations.Internal {
         }
 
         //--- Methods ---
-        public IDynamoTableBatchGetItems<TRecord> Get<T>(Expression<Func<TRecord, T>> attribute) {
+        public IDynamoTableBatchGetItems<TItem> Get<T>(Expression<Func<TItem, T>> attribute) {
             _converter.AddProjection(attribute.Body);
             return this;
         }
 
-        public async Task<IEnumerable<TRecord>> ExecuteAsync(int maxAttempts, CancellationToken cancellationToken = default) {
+        public async Task<IEnumerable<TItem>> ExecuteAsync(int maxAttempts, CancellationToken cancellationToken = default) {
             var requestTableAndKeys = _request.RequestItems.First();
             requestTableAndKeys.Value.ProjectionExpression = _converter.ConvertProjections();
 
             // NOTE (2021-06-30, bjorg): batch operations may run out of capacity/bandwidth and may have to be completed in batches themselves
-            var result = new List<TRecord>();
+            var result = new List<TItem>();
             var attempts = 1;
             do {
                 try {
                     var response = await _table.DynamoClient.BatchGetItemAsync(_request, cancellationToken);
                     if(response.Responses.Any()) {
-                        foreach(var item in response.Responses.Single().Value) {
-                            var record = _table.DeserializeItem<TRecord>(item);
-                            if(!(record is null)) {
-                                result.Add(record);
+                        foreach(var itemKeyAttributeValues in response.Responses.Single().Value) {
+                            var item = _table.DeserializeItem<TItem>(itemKeyAttributeValues);
+                            if(!(item is null)) {
+                                result.Add(item);
                             }
                         }
                     }

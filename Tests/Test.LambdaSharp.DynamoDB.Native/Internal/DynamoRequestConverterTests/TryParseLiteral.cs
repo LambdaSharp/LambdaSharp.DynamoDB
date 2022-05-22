@@ -51,7 +51,7 @@ namespace Test.LambdaSharp.DynamoDB.Internal.DynamoRequestConverterTests {
             var converter = new DynamoRequestConverter(new(), new(), new());
 
             // act
-            var expression = LambdaBody(record => (string)null);
+            var expression = LambdaBody(item => (string)null);
             var success = converter.TryParseLiteral(expression, out var output);
 
             // assert
@@ -68,7 +68,7 @@ namespace Test.LambdaSharp.DynamoDB.Internal.DynamoRequestConverterTests {
             var converter = new DynamoRequestConverter(new(), new(), new());
 
             // act
-            var expression = LambdaBody(record => true);
+            var expression = LambdaBody(item => true);
             var success = converter.TryParseLiteral(expression, out var output);
 
             // assert
@@ -86,7 +86,7 @@ namespace Test.LambdaSharp.DynamoDB.Internal.DynamoRequestConverterTests {
             var converter = new DynamoRequestConverter(new(), new(), new());
 
             // act
-            var expression = LambdaBody(record => Encoding.UTF8.GetBytes("Hello"));
+            var expression = LambdaBody(item => Encoding.UTF8.GetBytes("Hello"));
             var success = converter.TryParseLiteral(expression, out var output);
 
             // assert
@@ -104,7 +104,7 @@ namespace Test.LambdaSharp.DynamoDB.Internal.DynamoRequestConverterTests {
             var converter = new DynamoRequestConverter(new(), new(), new());
 
             // act
-            var expression = LambdaBody(record => "Hello");
+            var expression = LambdaBody(item => "Hello");
             var success = converter.TryParseLiteral(expression, out var output);
 
             // assert
@@ -122,7 +122,7 @@ namespace Test.LambdaSharp.DynamoDB.Internal.DynamoRequestConverterTests {
             var converter = new DynamoRequestConverter(new(), new(), new());
 
             // act
-            var expression = LambdaBody(record => 10);
+            var expression = LambdaBody(item => 10);
             var success = converter.TryParseLiteral(expression, out var output);
 
             // assert
@@ -140,7 +140,7 @@ namespace Test.LambdaSharp.DynamoDB.Internal.DynamoRequestConverterTests {
             var converter = new DynamoRequestConverter(new(), new(), new());
 
             // act
-            var expression = LambdaBody(record => 10L);
+            var expression = LambdaBody(item => 10L);
             var success = converter.TryParseLiteral(expression, out var output);
 
             // assert
@@ -158,7 +158,7 @@ namespace Test.LambdaSharp.DynamoDB.Internal.DynamoRequestConverterTests {
             var converter = new DynamoRequestConverter(new(), new(), new());
 
             // act
-            var expression = LambdaBody(record => 10.0d);
+            var expression = LambdaBody(item => 10.0d);
             var success = converter.TryParseLiteral(expression, out var output);
 
             // assert
@@ -176,7 +176,7 @@ namespace Test.LambdaSharp.DynamoDB.Internal.DynamoRequestConverterTests {
             var converter = new DynamoRequestConverter(new(), new(), new());
 
             // act
-            var expression = LambdaBody(record => 10m);
+            var expression = LambdaBody(item => 10m);
             var success = converter.TryParseLiteral(expression, out var output);
 
             // assert
@@ -194,7 +194,7 @@ namespace Test.LambdaSharp.DynamoDB.Internal.DynamoRequestConverterTests {
             var converter = new DynamoRequestConverter(new(), new(), new());
 
             // act
-            var expression = LambdaBody(record => new List<string>());
+            var expression = LambdaBody(item => new List<string>());
             var success = converter.TryParseLiteral(expression, out var output);
 
             // assert
@@ -212,7 +212,7 @@ namespace Test.LambdaSharp.DynamoDB.Internal.DynamoRequestConverterTests {
             var converter = new DynamoRequestConverter(new(), new(), new());
 
             // act
-            var expression = LambdaBody(record => new List<string> { "Hello" });
+            var expression = LambdaBody(item => new List<string> { "Hello" });
             var success = converter.TryParseLiteral(expression, out var output);
 
             // assert
@@ -232,7 +232,7 @@ namespace Test.LambdaSharp.DynamoDB.Internal.DynamoRequestConverterTests {
             var converter = new DynamoRequestConverter(new(), new(), new());
 
             // act
-            var expression = LambdaBody(record => new ArrayList());
+            var expression = LambdaBody(item => new ArrayList());
             var success = converter.TryParseLiteral(expression, out var output);
 
             // assert
@@ -250,7 +250,7 @@ namespace Test.LambdaSharp.DynamoDB.Internal.DynamoRequestConverterTests {
             var converter = new DynamoRequestConverter(new(), new(), new());
 
             // act
-            var expression = LambdaBody(record => new ArrayList { "Hello" });
+            var expression = LambdaBody(item => new ArrayList { "Hello" });
             var success = converter.TryParseLiteral(expression, out var output);
 
             // assert
@@ -269,7 +269,7 @@ namespace Test.LambdaSharp.DynamoDB.Internal.DynamoRequestConverterTests {
             var converter = new DynamoRequestConverter(new(), new(), new());
 
             // act
-            var expression = LambdaBody(record => new string[0]);
+            var expression = LambdaBody(item => new string[0]);
             var success = converter.TryParseLiteral(expression, out var output);
 
             // assert
@@ -287,7 +287,7 @@ namespace Test.LambdaSharp.DynamoDB.Internal.DynamoRequestConverterTests {
             var converter = new DynamoRequestConverter(new(), new(), new());
 
             // act
-            var expression = LambdaBody(record => new string[] { "Hello" });
+            var expression = LambdaBody(item => new string[] { "Hello" });
             var success = converter.TryParseLiteral(expression, out var output);
 
             // assert
@@ -306,7 +306,7 @@ namespace Test.LambdaSharp.DynamoDB.Internal.DynamoRequestConverterTests {
             var converter = new DynamoRequestConverter(new(), new(), new());
 
             // act
-            var expression = LambdaBody(record => new Dictionary<string, object>());
+            var expression = LambdaBody(item => new Dictionary<string, object>());
             var success = converter.TryParseLiteral(expression, out var output);
 
             // assert
@@ -327,7 +327,7 @@ namespace Test.LambdaSharp.DynamoDB.Internal.DynamoRequestConverterTests {
             var closure = new Dictionary<string, object> {
                 ["Key"] = "Value"
             };
-            var expression = LambdaBody(record => closure);
+            var expression = LambdaBody(item => closure);
             var success = converter.TryParseLiteral(expression, out var output);
 
             // assert
@@ -348,7 +348,7 @@ namespace Test.LambdaSharp.DynamoDB.Internal.DynamoRequestConverterTests {
             var converter = new DynamoRequestConverter(new(), new(), new());
 
             // act
-            var expression = LambdaBody(record => new HashSet<string> { "Hello" });
+            var expression = LambdaBody(item => new HashSet<string> { "Hello" });
             var success = converter.TryParseLiteral(expression, out var output);
 
             // assert
@@ -366,7 +366,7 @@ namespace Test.LambdaSharp.DynamoDB.Internal.DynamoRequestConverterTests {
             var converter = new DynamoRequestConverter(new(), new(), new());
 
             // act
-            var expression = LambdaBody(record => new HashSet<int> { 123 });
+            var expression = LambdaBody(item => new HashSet<int> { 123 });
             var success = converter.TryParseLiteral(expression, out var output);
 
             // assert
@@ -384,7 +384,7 @@ namespace Test.LambdaSharp.DynamoDB.Internal.DynamoRequestConverterTests {
             var converter = new DynamoRequestConverter(new(), new(), new());
 
             // act
-            var expression = LambdaBody(record => new HashSet<long> { 123L });
+            var expression = LambdaBody(item => new HashSet<long> { 123L });
             var success = converter.TryParseLiteral(expression, out var output);
 
             // assert
@@ -402,7 +402,7 @@ namespace Test.LambdaSharp.DynamoDB.Internal.DynamoRequestConverterTests {
             var converter = new DynamoRequestConverter(new(), new(), new());
 
             // act
-            var expression = LambdaBody(record => new HashSet<double> { 123d });
+            var expression = LambdaBody(item => new HashSet<double> { 123d });
             var success = converter.TryParseLiteral(expression, out var output);
 
             // assert
@@ -420,7 +420,7 @@ namespace Test.LambdaSharp.DynamoDB.Internal.DynamoRequestConverterTests {
             var converter = new DynamoRequestConverter(new(), new(), new());
 
             // act
-            var expression = LambdaBody(record => new HashSet<decimal> { 123m });
+            var expression = LambdaBody(item => new HashSet<decimal> { 123m });
             var success = converter.TryParseLiteral(expression, out var output);
 
             // assert
@@ -439,7 +439,7 @@ namespace Test.LambdaSharp.DynamoDB.Internal.DynamoRequestConverterTests {
             var converter = new DynamoRequestConverter(new(), new(), new());
 
             // act
-            var expression = LambdaBody(record => new HashSet<byte[]> { Encoding.UTF8.GetBytes("Hello") });
+            var expression = LambdaBody(item => new HashSet<byte[]> { Encoding.UTF8.GetBytes("Hello") });
             var success = converter.TryParseLiteral(expression, out var output);
 
             // assert
@@ -457,7 +457,7 @@ namespace Test.LambdaSharp.DynamoDB.Internal.DynamoRequestConverterTests {
             var converter = new DynamoRequestConverter(new(), new(), new());
 
             // act
-            var expression = LambdaBody(record => MyEnum.EnumValue);
+            var expression = LambdaBody(item => MyEnum.EnumValue);
             var success = converter.TryParseLiteral(expression, out var output);
 
             // assert

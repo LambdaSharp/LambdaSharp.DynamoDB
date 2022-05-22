@@ -29,8 +29,8 @@ using LambdaSharp.DynamoDB.Serialization.Utility;
 
 namespace LambdaSharp.DynamoDB.Native.Operations.Internal {
 
-    internal sealed class DynamoTableUpdateItem<TRecord> : IDynamoTableUpdateItem<TRecord>
-        where TRecord : class
+    internal sealed class DynamoTableUpdateItem<TItem> : IDynamoTableUpdateItem<TItem>
+        where TItem : class
     {
 
         //--- Fields ---
@@ -50,122 +50,122 @@ namespace LambdaSharp.DynamoDB.Native.Operations.Internal {
         }
 
         //--- Methods ---
-        public IDynamoTableUpdateItem<TRecord> WithCondition(Expression<Func<TRecord, bool>> condition) {
+        public IDynamoTableUpdateItem<TItem> WithCondition(Expression<Func<TItem, bool>> condition) {
             _converter.AddCondition(condition.Body);
             return this;
         }
 
         #region *** SET Actions ***
-        public IDynamoTableUpdateItem<TRecord> Set<T>(Expression<Func<TRecord, T>> attribute, T value)
+        public IDynamoTableUpdateItem<TItem> Set<T>(Expression<Func<TItem, T>> attribute, T value)
             => SetAttributePathExpression(_converter.ParseAttributePath(attribute.Body), _converter.GetExpressionValueName(value));
 
-        public IDynamoTableUpdateItem<TRecord> Set<T>(Expression<Func<TRecord, ISet<T>>> attribute, ISet<T> value)
+        public IDynamoTableUpdateItem<TItem> Set<T>(Expression<Func<TItem, ISet<T>>> attribute, ISet<T> value)
             => SetAttributePathExpression(_converter.ParseAttributePath(attribute.Body), _converter.GetExpressionValueName(value));
 
-        public IDynamoTableUpdateItem<TRecord> Set<T>(Expression<Func<TRecord, IDictionary<string, T>>> attribute, IDictionary<string, T> value)
+        public IDynamoTableUpdateItem<TItem> Set<T>(Expression<Func<TItem, IDictionary<string, T>>> attribute, IDictionary<string, T> value)
             => SetAttributePathExpression(_converter.ParseAttributePath(attribute.Body), _converter.GetExpressionValueName(value));
 
-        public IDynamoTableUpdateItem<TRecord> Set<T>(Expression<Func<TRecord, IList<T>>> attribute, IList<T> value)
+        public IDynamoTableUpdateItem<TItem> Set<T>(Expression<Func<TItem, IList<T>>> attribute, IList<T> value)
             => SetAttributePathExpression(_converter.ParseAttributePath(attribute.Body), _converter.GetExpressionValueName(value));
 
-        public IDynamoTableUpdateItem<TRecord> Set<T>(Expression<Func<TRecord, T>> attribute, Expression<Func<TRecord, T>> value)
+        public IDynamoTableUpdateItem<TItem> Set<T>(Expression<Func<TItem, T>> attribute, Expression<Func<TItem, T>> value)
             => SetAttributePathExpression(_converter.ParseAttributePath(attribute.Body), _converter.ParseValue(value.Body));
 
-        public IDynamoTableUpdateItem<TRecord> Set<T>(Expression<Func<TRecord, ISet<T>>> attribute, Expression<Func<TRecord, ISet<T>>> value)
+        public IDynamoTableUpdateItem<TItem> Set<T>(Expression<Func<TItem, ISet<T>>> attribute, Expression<Func<TItem, ISet<T>>> value)
             => SetAttributePathExpression(_converter.ParseAttributePath(attribute.Body), _converter.ParseValue(value.Body));
 
-        public IDynamoTableUpdateItem<TRecord> Set<T>(Expression<Func<TRecord, IDictionary<string, T>>> attribute, Expression<Func<TRecord, IDictionary<string, T>>> value)
+        public IDynamoTableUpdateItem<TItem> Set<T>(Expression<Func<TItem, IDictionary<string, T>>> attribute, Expression<Func<TItem, IDictionary<string, T>>> value)
             => SetAttributePathExpression(_converter.ParseAttributePath(attribute.Body), _converter.ParseValue(value.Body));
 
-        public IDynamoTableUpdateItem<TRecord> Set<T>(Expression<Func<TRecord, IList<T>>> attribute, Expression<Func<TRecord, IList<T>>> value)
+        public IDynamoTableUpdateItem<TItem> Set<T>(Expression<Func<TItem, IList<T>>> attribute, Expression<Func<TItem, IList<T>>> value)
             => SetAttributePathExpression(_converter.ParseAttributePath(attribute.Body), _converter.ParseValue(value.Body));
 
-        public IDynamoTableUpdateItem<TRecord> Set(string attribute, AttributeValue value)
+        public IDynamoTableUpdateItem<TItem> Set(string attribute, AttributeValue value)
             => SetAttributePathExpression(_converter.GetAttributeName(attribute), _converter.GetExpressionValueName(value));
 
-        private  IDynamoTableUpdateItem<TRecord> SetAttributePathExpression(string attributePath, string attributeValueExpression) {
+        private  IDynamoTableUpdateItem<TItem> SetAttributePathExpression(string attributePath, string attributeValueExpression) {
             _setOperations.Add($"{attributePath} = {attributeValueExpression}");
             return this;
         }
         #endregion
 
         #region *** REMOVE Actions ***
-        public IDynamoTableUpdateItem<TRecord> Remove<T>(Expression<Func<TRecord, T>> attribute) {
+        public IDynamoTableUpdateItem<TItem> Remove<T>(Expression<Func<TItem, T>> attribute) {
             _removeOperations.Add(_converter.ParseAttributePath(attribute.Body));
             return this;
         }
 
-        public IDynamoTableUpdateItem<TRecord> Remove(string key) {
+        public IDynamoTableUpdateItem<TItem> Remove(string key) {
             _removeOperations.Add(_converter.GetAttributeName(key));
             return this;
         }
         #endregion
 
         #region *** ADD Actions ***
-        public IDynamoTableUpdateItem<TRecord> Add(Expression<Func<TRecord, int>> attribute, int value) {
+        public IDynamoTableUpdateItem<TItem> Add(Expression<Func<TItem, int>> attribute, int value) {
             var path = _converter.ParseAttributePath(attribute.Body);
             var operand = _converter.GetExpressionValueName(value);
             _addOperations.Add($"{path} {operand}");
             return this;
         }
 
-        public IDynamoTableUpdateItem<TRecord> Add(Expression<Func<TRecord, long>> attribute, long value) {
+        public IDynamoTableUpdateItem<TItem> Add(Expression<Func<TItem, long>> attribute, long value) {
             var path = _converter.ParseAttributePath(attribute.Body);
             var operand = _converter.GetExpressionValueName(value);
             _addOperations.Add($"{path} {operand}");
             return this;
         }
 
-        public IDynamoTableUpdateItem<TRecord> Add(Expression<Func<TRecord, double>> attribute, double value) {
+        public IDynamoTableUpdateItem<TItem> Add(Expression<Func<TItem, double>> attribute, double value) {
             var path = _converter.ParseAttributePath(attribute.Body);
             var operand = _converter.GetExpressionValueName(value);
             _addOperations.Add($"{path} {operand}");
             return this;
         }
 
-        public IDynamoTableUpdateItem<TRecord> Add(Expression<Func<TRecord, decimal>> attribute, decimal value) {
+        public IDynamoTableUpdateItem<TItem> Add(Expression<Func<TItem, decimal>> attribute, decimal value) {
             var path = _converter.ParseAttributePath(attribute.Body);
             var operand = _converter.GetExpressionValueName(value);
             _addOperations.Add($"{path} {operand}");
             return this;
         }
 
-        public IDynamoTableUpdateItem<TRecord> Add(Expression<Func<TRecord, ISet<string>>> attribute, IEnumerable<string> values) {
+        public IDynamoTableUpdateItem<TItem> Add(Expression<Func<TItem, ISet<string>>> attribute, IEnumerable<string> values) {
             var path = _converter.ParseAttributePath(attribute.Body);
             var operand = _converter.GetExpressionValueName(values.ToHashSet());
             _addOperations.Add($"{path} {operand}");
             return this;
         }
 
-        public IDynamoTableUpdateItem<TRecord> Add(Expression<Func<TRecord, ISet<byte[]>>> attribute, IEnumerable<byte[]> values) {
+        public IDynamoTableUpdateItem<TItem> Add(Expression<Func<TItem, ISet<byte[]>>> attribute, IEnumerable<byte[]> values) {
             var path = _converter.ParseAttributePath(attribute.Body);
             var operand = _converter.GetExpressionValueName(values.ToHashSet(ByteArrayEqualityComparer.Instance));
             _addOperations.Add($"{path} {operand}");
             return this;
         }
 
-        public IDynamoTableUpdateItem<TRecord> Add(Expression<Func<TRecord, ISet<int>>> attribute, IEnumerable<int> values) {
+        public IDynamoTableUpdateItem<TItem> Add(Expression<Func<TItem, ISet<int>>> attribute, IEnumerable<int> values) {
             var path = _converter.ParseAttributePath(attribute.Body);
             var operand = _converter.GetExpressionValueName(values.ToHashSet());
             _addOperations.Add($"{path} {operand}");
             return this;
         }
 
-        public IDynamoTableUpdateItem<TRecord> Add(Expression<Func<TRecord, ISet<long>>> attribute, IEnumerable<long> values) {
+        public IDynamoTableUpdateItem<TItem> Add(Expression<Func<TItem, ISet<long>>> attribute, IEnumerable<long> values) {
             var path = _converter.ParseAttributePath(attribute.Body);
             var operand = _converter.GetExpressionValueName(values.ToHashSet());
             _addOperations.Add($"{path} {operand}");
             return this;
         }
 
-        public IDynamoTableUpdateItem<TRecord> Add(Expression<Func<TRecord, ISet<double>>> attribute, IEnumerable<double> values) {
+        public IDynamoTableUpdateItem<TItem> Add(Expression<Func<TItem, ISet<double>>> attribute, IEnumerable<double> values) {
             var path = _converter.ParseAttributePath(attribute.Body);
             var operand = _converter.GetExpressionValueName(values.ToHashSet());
             _addOperations.Add($"{path} {operand}");
             return this;
         }
 
-        public IDynamoTableUpdateItem<TRecord> Add(Expression<Func<TRecord, ISet<decimal>>> attribute, IEnumerable<decimal> values) {
+        public IDynamoTableUpdateItem<TItem> Add(Expression<Func<TItem, ISet<decimal>>> attribute, IEnumerable<decimal> values) {
             var path = _converter.ParseAttributePath(attribute.Body);
             var operand = _converter.GetExpressionValueName(values.ToHashSet());
             _addOperations.Add($"{path} {operand}");
@@ -174,42 +174,42 @@ namespace LambdaSharp.DynamoDB.Native.Operations.Internal {
         #endregion
 
         #region *** DELETE Actions ***
-        public IDynamoTableUpdateItem<TRecord> Delete(Expression<Func<TRecord, ISet<string>>> attribute, IEnumerable<string> values) {
+        public IDynamoTableUpdateItem<TItem> Delete(Expression<Func<TItem, ISet<string>>> attribute, IEnumerable<string> values) {
             var path = _converter.ParseAttributePath(attribute.Body);
             var operand = _converter.GetExpressionValueName(values.ToHashSet());
             _deleteOperations.Add($"{path} {operand}");
             return this;
         }
 
-        public IDynamoTableUpdateItem<TRecord> Delete(Expression<Func<TRecord, ISet<byte[]>>> attribute, IEnumerable<byte[]> values) {
+        public IDynamoTableUpdateItem<TItem> Delete(Expression<Func<TItem, ISet<byte[]>>> attribute, IEnumerable<byte[]> values) {
             var path = _converter.ParseAttributePath(attribute.Body);
             var operand = _converter.GetExpressionValueName(values.ToHashSet());
             _deleteOperations.Add($"{path} {operand}");
             return this;
         }
 
-        public IDynamoTableUpdateItem<TRecord> Delete(Expression<Func<TRecord, ISet<int>>> attribute, IEnumerable<int> values) {
+        public IDynamoTableUpdateItem<TItem> Delete(Expression<Func<TItem, ISet<int>>> attribute, IEnumerable<int> values) {
             var path = _converter.ParseAttributePath(attribute.Body);
             var operand = _converter.GetExpressionValueName(values.ToHashSet());
             _deleteOperations.Add($"{path} {operand}");
             return this;
         }
 
-        public IDynamoTableUpdateItem<TRecord> Delete(Expression<Func<TRecord, ISet<long>>> attribute, IEnumerable<long> values) {
+        public IDynamoTableUpdateItem<TItem> Delete(Expression<Func<TItem, ISet<long>>> attribute, IEnumerable<long> values) {
             var path = _converter.ParseAttributePath(attribute.Body);
             var operand = _converter.GetExpressionValueName(values.ToHashSet());
             _deleteOperations.Add($"{path} {operand}");
             return this;
         }
 
-        public IDynamoTableUpdateItem<TRecord> Delete(Expression<Func<TRecord, ISet<double>>> attribute, IEnumerable<double> values) {
+        public IDynamoTableUpdateItem<TItem> Delete(Expression<Func<TItem, ISet<double>>> attribute, IEnumerable<double> values) {
             var path = _converter.ParseAttributePath(attribute.Body);
             var operand = _converter.GetExpressionValueName(values.ToHashSet());
             _deleteOperations.Add($"{path} {operand}");
             return this;
         }
 
-        public IDynamoTableUpdateItem<TRecord> Delete(Expression<Func<TRecord, ISet<decimal>>> attribute, IEnumerable<decimal> values) {
+        public IDynamoTableUpdateItem<TItem> Delete(Expression<Func<TItem, ISet<decimal>>> attribute, IEnumerable<decimal> values) {
             var path = _converter.ParseAttributePath(attribute.Body);
             var operand = _converter.GetExpressionValueName(values.ToHashSet());
             _deleteOperations.Add($"{path} {operand}");
@@ -227,25 +227,25 @@ namespace LambdaSharp.DynamoDB.Native.Operations.Internal {
             }
         }
 
-        public async Task<TRecord?> ExecuteReturnNewItemAsync(CancellationToken cancellationToken) {
+        public async Task<TItem?> ExecuteReturnNewItemAsync(CancellationToken cancellationToken) {
             PrepareRequest();
             _request.ReturnValues = ReturnValue.ALL_NEW;
             try {
                 var response = await _table.DynamoClient.UpdateItemAsync(_request);
-                return _table.DeserializeItem<TRecord>(response.Attributes);
+                return _table.DeserializeItem<TItem>(response.Attributes);
             } catch(ConditionalCheckFailedException) {
-                return default(TRecord);
+                return default(TItem);
             }
         }
 
-        public async Task<TRecord?> ExecuteReturnOldItemAsync(CancellationToken cancellationToken) {
+        public async Task<TItem?> ExecuteReturnOldItemAsync(CancellationToken cancellationToken) {
             PrepareRequest();
             _request.ReturnValues = ReturnValue.ALL_OLD;
             try {
                 var response = await _table.DynamoClient.UpdateItemAsync(_request);
-                return _table.DeserializeItem<TRecord>(response.Attributes);
+                return _table.DeserializeItem<TItem>(response.Attributes);
             } catch(ConditionalCheckFailedException) {
-                return default(TRecord);
+                return default(TItem);
             }
         }
 

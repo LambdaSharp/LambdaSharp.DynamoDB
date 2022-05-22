@@ -37,8 +37,8 @@ namespace LambdaSharp.DynamoDB.Native.Query {
         /// Add a partition key (PK) constraint.
         /// </summary>
         /// <param name="pkValue">The partition key (PK) value.</param>
-        /// <typeparam name="TRecord">The record type.</typeparam>
-        IDynamoQuerySortKeyConstraint<TRecord> SelectPK<TRecord>(string pkValue) where TRecord : class;
+        /// <typeparam name="TItem">The item type.</typeparam>
+        IDynamoQuerySortKeyConstraint<TItem> SelectPK<TItem>(string pkValue) where TItem : class;
 
         //--- Default Methods ---
 
@@ -62,9 +62,9 @@ namespace LambdaSharp.DynamoDB.Native.Query {
         /// </summary>
         /// <param name="pkValueFormat">Format string for the partition key (PK) value.</param>
         /// <param name="values">A string array that contains zero or more strings for the partition key format string.</param>
-        /// <typeparam name="TRecord">The record type.</typeparam>
-        IDynamoQuerySortKeyConstraint<TRecord> SelectPKFormat<TRecord>(string pkValueFormat, params string[] values)
-            where TRecord : class
+        /// <typeparam name="TItem">The item type.</typeparam>
+        IDynamoQuerySortKeyConstraint<TItem> SelectPKFormat<TItem>(string pkValueFormat, params string[] values)
+            where TItem : class
         {
             for(var i = 0; i < values.Length; ++i) {
                 if(values[i] is null) {
@@ -72,7 +72,7 @@ namespace LambdaSharp.DynamoDB.Native.Query {
                 }
             }
             var pkValue = string.Format(pkValueFormat ?? throw new ArgumentNullException(nameof(pkValueFormat)), values);
-            return SelectPK<TRecord>(pkValue);
+            return SelectPK<TItem>(pkValue);
         }
     }
 }

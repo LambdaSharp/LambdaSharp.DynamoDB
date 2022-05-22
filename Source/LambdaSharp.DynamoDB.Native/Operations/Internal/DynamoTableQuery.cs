@@ -30,18 +30,18 @@ using LambdaSharp.DynamoDB.Native.Query.Internal;
 
 namespace LambdaSharp.DynamoDB.Native.Operations.Internal {
 
-    internal sealed class DynamoTableQuery<TRecord> : IDynamoTableQuery, IDynamoTableQuery<TRecord>
-        where TRecord : class
+    internal sealed class DynamoTableQuery<TItem> : IDynamoTableQuery, IDynamoTableQuery<TItem>
+        where TItem : class
     {
 
         //--- Fields ---
         private readonly DynamoTable _table;
         private readonly QueryRequest _request;
         private readonly DynamoRequestConverter _converter;
-        private readonly ADynamoQueryClause<TRecord> _queryClause;
+        private readonly ADynamoQueryClause<TItem> _queryClause;
 
         //--- Constructors ---
-        public DynamoTableQuery(DynamoTable table, QueryRequest request, ADynamoQueryClause<TRecord> queryClause) {
+        public DynamoTableQuery(DynamoTable table, QueryRequest request, ADynamoQueryClause<TItem> queryClause) {
             _table = table ?? throw new ArgumentNullException(nameof(table));
             _request = request ?? throw new ArgumentNullException(nameof(request));
             _queryClause = queryClause ?? throw new ArgumentNullException(nameof(queryClause));
@@ -75,13 +75,13 @@ namespace LambdaSharp.DynamoDB.Native.Operations.Internal {
             }
         }
 
-        //--- IDynamoTableQuery<TRecord> Members ---
-        IDynamoTableQuery<TRecord> IDynamoTableQuery<TRecord>.Where(Expression<Func<TRecord, bool>> filter) {
+        //--- IDynamoTableQuery<TItem> Members ---
+        IDynamoTableQuery<TItem> IDynamoTableQuery<TItem>.Where(Expression<Func<TItem, bool>> filter) {
             _converter.AddCondition(filter.Body);
             return this;
         }
 
-        IDynamoTableQuery<TRecord> IDynamoTableQuery<TRecord>.Get<T>(Expression<Func<TRecord, T>> attribute) {
+        IDynamoTableQuery<TItem> IDynamoTableQuery<TItem>.Get<T>(Expression<Func<TItem, T>> attribute) {
             _converter.AddProjection(attribute.Body);
 
             // NOTE (2021-06-24, bjorg): we always fetch `_t` to allow polymorphic deserialization
@@ -89,29 +89,29 @@ namespace LambdaSharp.DynamoDB.Native.Operations.Internal {
             return this;
         }
 
-        async IAsyncEnumerable<TRecord> IDynamoTableQuery<TRecord>.ExecuteAsyncEnumerable(bool fetchAllAttributes, [EnumeratorCancellation] CancellationToken cancellationToken) {
+        async IAsyncEnumerable<TItem> IDynamoTableQuery<TItem>.ExecuteAsyncEnumerable(bool fetchAllAttributes, [EnumeratorCancellation] CancellationToken cancellationToken) {
             PrepareRequest(fetchAllAttributes);
             do {
                 var response = await _table.DynamoClient.QueryAsync(_request, cancellationToken);
-                foreach(var item in response.Items) {
-                    var record = _table.DeserializeItemUsingRecordType(item, typeof(TRecord), _converter.ExpectedTypes);
-                    if(!(record is null) && (record is TRecord typedRecord)) {
-                        yield return typedRecord;
+                foreach(var itemKeyAttributeValues in response.Items) {
+                    var item = _table.DeserializeItemUsingItemType(itemKeyAttributeValues, typeof(TItem), _converter.ExpectedTypes);
+                    if(!(item is null) && (item is TItem typedItem)) {
+                        yield return typedItem;
                     }
                 }
                 _request.ExclusiveStartKey = response.LastEvaluatedKey;
             } while(_request.ExclusiveStartKey.Any());
         }
 
-        async Task<IEnumerable<TRecord>> IDynamoTableQuery<TRecord>.ExecuteAsync(bool fetchAllAttributes, CancellationToken cancellationToken) {
+        async Task<IEnumerable<TItem>> IDynamoTableQuery<TItem>.ExecuteAsync(bool fetchAllAttributes, CancellationToken cancellationToken) {
             PrepareRequest(fetchAllAttributes);
-            var result = new List<TRecord>();
+            var result = new List<TItem>();
             do {
                 var response = await _table.DynamoClient.QueryAsync(_request, cancellationToken);
-                foreach(var item in response.Items) {
-                    var record = _table.DeserializeItemUsingRecordType(item, typeof(TRecord), _converter.ExpectedTypes);
-                    if(!(record is null) && (record is TRecord typedRecord)) {
-                        result.Add(typedRecord);
+                foreach(var itemKeyAttributeValues in response.Items) {
+                    var item = _table.DeserializeItemUsingItemType(itemKeyAttributeValues, typeof(TItem), _converter.ExpectedTypes);
+                    if(!(item is null) && (item is TItem typedItem)) {
+                        result.Add(typedItem);
                     }
                 }
                 _request.ExclusiveStartKey = response.LastEvaluatedKey;
@@ -120,12 +120,12 @@ namespace LambdaSharp.DynamoDB.Native.Operations.Internal {
         }
 
         //--- IDynamoTableQuery Members ---
-        IDynamoTableQuery IDynamoTableQuery.Where<TRecord1>(Expression<Func<TRecord1, bool>> filter) {
+        IDynamoTableQuery IDynamoTableQuery.Where<TItem1>(Expression<Func<TItem1, bool>> filter) {
             _converter.AddCondition(filter.Body);
             return this;
         }
 
-        IDynamoTableQuery IDynamoTableQuery.Get<TRecord1, T>(Expression<Func<TRecord1, T>> attribute) {
+        IDynamoTableQuery IDynamoTableQuery.Get<TItem1, T>(Expression<Func<TItem1, T>> attribute) {
             _converter.AddProjection(attribute.Body);
 
             // NOTE (2021-06-24, bjorg): we always fetch `_t` to allow polymorphic deserialization
@@ -137,10 +137,10 @@ namespace LambdaSharp.DynamoDB.Native.Operations.Internal {
             PrepareRequest(fetchAllAttributes);
             do {
                 var response = await _table.DynamoClient.QueryAsync(_request, cancellationToken);
-                foreach(var item in response.Items) {
-                    var record = _table.DeserializeItemUsingRecordType(item, typeof(TRecord), _converter.ExpectedTypes);
-                    if(!(record is null) && (record is TRecord typedRecord)) {
-                        yield return typedRecord;
+                foreach(var itemKeyAttributeValues in response.Items) {
+                    var item = _table.DeserializeItemUsingItemType(itemKeyAttributeValues, typeof(TItem), _converter.ExpectedTypes);
+                    if(!(item is null) && (item is TItem typedItem)) {
+                        yield return typedItem;
                     }
                 }
                 _request.ExclusiveStartKey = response.LastEvaluatedKey;
@@ -149,13 +149,13 @@ namespace LambdaSharp.DynamoDB.Native.Operations.Internal {
 
         async Task<IEnumerable<object>> IDynamoTableQuery.ExecuteAsync(bool fetchAllAttributes, CancellationToken cancellationToken) {
             PrepareRequest(fetchAllAttributes);
-            var result = new List<TRecord>();
+            var result = new List<TItem>();
             do {
                 var response = await _table.DynamoClient.QueryAsync(_request, cancellationToken);
-                foreach(var item in response.Items) {
-                    var record = _table.DeserializeItemUsingRecordType(item, typeof(TRecord), _converter.ExpectedTypes);
-                    if(!(record is null) && (record is TRecord typedRecord)) {
-                        result.Add(typedRecord);
+                foreach(var itemKeyAttributeValues in response.Items) {
+                    var item = _table.DeserializeItemUsingItemType(itemKeyAttributeValues, typeof(TItem), _converter.ExpectedTypes);
+                    if(!(item is null) && (item is TItem typedItem)) {
+                        result.Add(typedItem);
                     }
                 }
                 _request.ExclusiveStartKey = response.LastEvaluatedKey;

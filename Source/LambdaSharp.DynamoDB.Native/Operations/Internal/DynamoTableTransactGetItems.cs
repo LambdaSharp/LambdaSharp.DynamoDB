@@ -32,8 +32,8 @@ namespace LambdaSharp.DynamoDB.Native.Operations.Internal {
         private const int MILLISECOND_BACKOFF = 100;
 
         //--- Types ---
-        internal sealed class DynamoTableTransactGetItemsEntry<TRecord> : IDynamoTableTransactGetItemsBegin<TRecord>
-            where TRecord : class
+        internal sealed class DynamoTableTransactGetItemsEntry<TItem> : IDynamoTableTransactGetItemsBegin<TItem>
+            where TItem : class
         {
 
             //--- Fields ---
@@ -47,7 +47,7 @@ namespace LambdaSharp.DynamoDB.Native.Operations.Internal {
             }
 
             //--- Methods ---
-            public IDynamoTableTransactGetItemsBegin<TRecord> Get<T>(System.Linq.Expressions.Expression<Func<TRecord, T>> attribute) {
+            public IDynamoTableTransactGetItemsBegin<TItem> Get<T>(System.Linq.Expressions.Expression<Func<TItem, T>> attribute) {
                 _converter.AddProjection(attribute.Body);
 
                 // NOTE (2021-07-02, bjorg): we always fetch `_t` to allow polymorphic deserialization
@@ -71,7 +71,7 @@ namespace LambdaSharp.DynamoDB.Native.Operations.Internal {
         }
 
         //--- Methods ---
-        public IDynamoTableTransactGetItemsBegin<TRecord> BeginGetItem<TRecord>(DynamoPrimaryKey<TRecord> primaryKey, bool consistentRead = false) where TRecord : class {
+        public IDynamoTableTransactGetItemsBegin<TItem> BeginGetItem<TItem>(DynamoPrimaryKey<TItem> primaryKey, bool consistentRead = false) where TItem : class {
 
             // transaction GetItem
             var transactGetItem = new TransactGetItem {
@@ -90,8 +90,8 @@ namespace LambdaSharp.DynamoDB.Native.Operations.Internal {
             _converters.Add(converter);
 
             // register expected type
-            converter.AddExpectedType(typeof(TRecord));
-            return new DynamoTableTransactGetItemsEntry<TRecord>(this, converter);
+            converter.AddExpectedType(typeof(TItem));
+            return new DynamoTableTransactGetItemsEntry<TItem>(this, converter);
         }
 
         public async Task<(bool Success, IEnumerable<object> Items)> TryExecuteAsync(int maxAttempts, CancellationToken cancellationToken = default) {
@@ -118,9 +118,9 @@ namespace LambdaSharp.DynamoDB.Native.Operations.Internal {
                     mergedExpectedTypes[expectedTypeName] = expectedType;
                 }
                 foreach(var itemResponse in response.Responses) {
-                    var record = _table.DeserializeItemUsingRecordType(itemResponse.Item, typeof(object), mergedExpectedTypes);
-                    if(!(record is null)) {
-                        result.Add(record);
+                    var item = _table.DeserializeItemUsingItemType(itemResponse.Item, typeof(object), mergedExpectedTypes);
+                    if(!(item is null)) {
+                        result.Add(item);
                     }
                 }
                 return (Success: true, Items: result);

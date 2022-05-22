@@ -27,8 +27,8 @@ namespace LambdaSharp.DynamoDB.Native.Operations {
     /// <summary>
     /// Interface to specify a PutItem operation.
     /// </summary>
-    /// <typeparam name="TRecord">The record type.</typeparam>
-    public interface IDynamoTablePutItem<TRecord> where TRecord : class {
+    /// <typeparam name="TItem">The item type.</typeparam>
+    public interface IDynamoTablePutItem<TItem> where TItem : class {
 
         //--- Methods ---
 
@@ -36,24 +36,24 @@ namespace LambdaSharp.DynamoDB.Native.Operations {
         /// Add condition for PutItem operation.
         /// </summary>
         /// <param name="condition">A lambda predicate representing the DynamoDB condition expression.</param>
-        IDynamoTablePutItem<TRecord> WithCondition(Expression<Func<TRecord, bool>> condition);
+        IDynamoTablePutItem<TItem> WithCondition(Expression<Func<TItem, bool>> condition);
 
         /// <summary>
         /// Add condition that item exists for PutItem operation.
         /// </summary>
-        IDynamoTablePutItem<TRecord> WithConditionItemExists() => WithCondition(record => DynamoCondition.Exists(record));
+        IDynamoTablePutItem<TItem> WithConditionItemExists() => WithCondition(item => DynamoCondition.Exists(item));
 
         /// <summary>
         /// Add condition that item does not exist for PutItem operation.
         /// </summary>
-        IDynamoTablePutItem<TRecord> WithConditionItemDoesNotExist() => WithCondition(record => DynamoCondition.DoesNotExist(record));
+        IDynamoTablePutItem<TItem> WithConditionItemDoesNotExist() => WithCondition(item => DynamoCondition.DoesNotExist(item));
 
         /// <summary>
         /// Set the value of a DynamoDB item attribute. Used for storing attributes used by local/global secondary indices.
         /// </summary>
         /// <param name="key">Name of attribute.</param>
         /// <param name="value">Value of attribute.</param>
-        IDynamoTablePutItem<TRecord> Set(string key, AttributeValue value);
+        IDynamoTablePutItem<TItem> Set(string key, AttributeValue value);
 
         /// <summary>
         /// Execute the PutItem operation.
@@ -66,8 +66,8 @@ namespace LambdaSharp.DynamoDB.Native.Operations {
         /// Execute the PutItem operation.
         /// </summary>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>Old record when found. <c>null</c>, otherwise.</returns>
-        Task<TRecord?> ExecuteReturnOldItemAsync(CancellationToken cancellationToken = default);
+        /// <returns>Old item when found. <c>null</c>, otherwise.</returns>
+        Task<TItem?> ExecuteReturnOldItemAsync(CancellationToken cancellationToken = default);
 
         //--- Default Methods ---
 
@@ -76,7 +76,7 @@ namespace LambdaSharp.DynamoDB.Native.Operations {
         /// </summary>
         /// <param name="key">Name of attribute.</param>
         /// <param name="value">Value of attribute.</param>
-        IDynamoTablePutItem<TRecord> Set(string key, string value)
+        IDynamoTablePutItem<TItem> Set(string key, string value)
             => Set(key, new AttributeValue(value));
     }
 }

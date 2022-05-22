@@ -23,14 +23,14 @@ using LambdaSharp.DynamoDB.Native.Query;
 namespace LambdaSharp.DynamoDB.Native {
 
     /// <summary>
-    /// Interface identifying a DynamoDB query clause for mixed records.
+    /// Interface identifying a DynamoDB query clause for mixed items.
     /// </summary>
     public interface IDynamoQueryClause {
 
         //--- Methods ---
 
         /// <summary>
-        /// Limit results to record with the specified type.
+        /// Limit results to items with the specified type.
         /// </summary>
         /// <param name="type">Type filter to add.</param>
         IDynamoQueryClause WithTypeFilter(Type type);
@@ -38,7 +38,7 @@ namespace LambdaSharp.DynamoDB.Native {
         //--- Default Methods ---
 
         /// <summary>
-        /// Limit results to record with the specified type.
+        /// Limit results to items with the specified type.
         /// </summary>
         /// <typeparam name="T">Type to filter by.</typeparam>
         IDynamoQueryClause WithTypeFilter<T>( ) => WithTypeFilter(typeof(T));
@@ -47,7 +47,7 @@ namespace LambdaSharp.DynamoDB.Native {
     /// <summary>
     /// Interface identifying a DynamoDB query clause.
     /// </summary>
-    public interface IDynamoQueryClause<TRecord> where TRecord : class { }
+    public interface IDynamoQueryClause<TItem> where TItem : class { }
 
     /// <summary>
     /// The <see cref="DynamoQuery"/> defines static methods for building DynamoDB
@@ -83,10 +83,10 @@ namespace LambdaSharp.DynamoDB.Native {
         /// Build a DynamoDB query clause by selecting a partition key (PK) on the main index.
         /// </summary>
         /// <param name="pkValue">The partition key (PK) value.</param>
-        /// <typeparam name="TRecord">The record type.</typeparam>
-        public static IDynamoQuerySortKeyConstraint<TRecord> SelectPK<TRecord>(string pkValue)
-            where TRecord : class
-            => FromMainIndex().SelectPK<TRecord>(pkValue);
+        /// <typeparam name="TItem">The item type.</typeparam>
+        public static IDynamoQuerySortKeyConstraint<TItem> SelectPK<TItem>(string pkValue)
+            where TItem : class
+            => FromMainIndex().SelectPK<TItem>(pkValue);
 
         /// <summary>
         /// Build an untyped DynamoDB query clause by selecting a partition key (PK) on the main index.
@@ -108,15 +108,15 @@ namespace LambdaSharp.DynamoDB.Native {
         /// </summary>
         /// <param name="pkValueFormat">Format string for the partition key (PK) value.</param>
         /// <param name="values">A string array that contains zero or more strings for the partition key format string.</param>
-        /// <typeparam name="TRecord">The record type.</typeparam>
-        public static IDynamoQuerySortKeyConstraint<TRecord> SelectPKFormat<TRecord>(string pkValueFormat, params string[] values) where TRecord : class {
+        /// <typeparam name="TItem">The item type.</typeparam>
+        public static IDynamoQuerySortKeyConstraint<TItem> SelectPKFormat<TItem>(string pkValueFormat, params string[] values) where TItem : class {
             for(var i = 0; i < values.Length; ++i) {
                 if(values[i] is null) {
                     throw new ArgumentException($"key[{i}] is null", nameof(values));
                 }
             }
             var pkValue = string.Format(pkValueFormat ?? throw new ArgumentNullException(nameof(pkValueFormat)), values);
-            return SelectPK<TRecord>(pkValue);
+            return SelectPK<TItem>(pkValue);
         }
     }
 }

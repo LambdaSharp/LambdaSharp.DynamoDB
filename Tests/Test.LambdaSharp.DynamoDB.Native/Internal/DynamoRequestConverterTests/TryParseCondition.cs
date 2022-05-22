@@ -45,7 +45,7 @@ namespace Test.LambdaSharp.DynamoDB.Internal.DynamoRequestConverterTests {
             var converter = new DynamoRequestConverter(new(), new(), new());
 
             // act
-            var expression = LambdaBody(record => record.Enum == MyEnum.EnumValue);
+            var expression = LambdaBody(item => item.Enum == MyEnum.EnumValue);
             var success = converter.TryParseCondition(expression, out var output, out _);
 
             // assert
@@ -63,7 +63,7 @@ namespace Test.LambdaSharp.DynamoDB.Internal.DynamoRequestConverterTests {
             var converter = new DynamoRequestConverter(new(), new(), new());
 
             // act
-            var expression = LambdaBody(record => record.Enum != MyEnum.EnumValue);
+            var expression = LambdaBody(item => item.Enum != MyEnum.EnumValue);
             var success = converter.TryParseCondition(expression, out var output, out _);
 
             // assert
@@ -84,7 +84,7 @@ namespace Test.LambdaSharp.DynamoDB.Internal.DynamoRequestConverterTests {
             var rec = new MyRecord {
                 Enum = MyEnum.EnumValue
             };
-            var expression = LambdaBody(record => record.Enum == rec.Enum);
+            var expression = LambdaBody(item => item.Enum == rec.Enum);
             var success = converter.TryParseCondition(expression, out var output, out _);
 
             // assert

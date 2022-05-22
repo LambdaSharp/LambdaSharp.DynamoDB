@@ -47,7 +47,7 @@ namespace Test.LambdaSharp.DynamoDB.Internal.DynamoRequestConverterTests {
             var converter = new DynamoRequestConverter(new(), new(), new());
 
             // act
-            var expression = LambdaBody(record => record.Name);
+            var expression = LambdaBody(item => item.Name);
             var success = converter.TryParseAttributePath(expression, out var output);
 
             // assert
@@ -64,7 +64,7 @@ namespace Test.LambdaSharp.DynamoDB.Internal.DynamoRequestConverterTests {
             var converter = new DynamoRequestConverter(new(), new(), new());
 
             // act
-            var expression = LambdaBody(record => record.Nested.Age);
+            var expression = LambdaBody(item => item.Nested.Age);
             var success = converter.TryParseAttributePath(expression, out var output);
 
             // assert
@@ -79,7 +79,7 @@ namespace Test.LambdaSharp.DynamoDB.Internal.DynamoRequestConverterTests {
             var converter = new DynamoRequestConverter(new(), new(), new());
 
             // act
-            var expression = LambdaBody(record => record.Array[5]);
+            var expression = LambdaBody(item => item.Array[5]);
             var success = converter.TryParseAttributePath(expression, out var output);
 
             // assert
@@ -96,7 +96,7 @@ namespace Test.LambdaSharp.DynamoDB.Internal.DynamoRequestConverterTests {
             var converter = new DynamoRequestConverter(new(), new(), new());
 
             // act
-            var expression = LambdaBody(record => record.ArrayList[5]);
+            var expression = LambdaBody(item => item.ArrayList[5]);
             var success = converter.TryParseAttributePath(expression, out var output);
 
             // assert
@@ -111,7 +111,7 @@ namespace Test.LambdaSharp.DynamoDB.Internal.DynamoRequestConverterTests {
             var converter = new DynamoRequestConverter(new(), new(), new());
 
             // act
-            var expression = LambdaBody(record => record.List[3]);
+            var expression = LambdaBody(item => item.List[3]);
             var success = converter.TryParseAttributePath(expression, out var output);
 
             // assert
@@ -128,7 +128,7 @@ namespace Test.LambdaSharp.DynamoDB.Internal.DynamoRequestConverterTests {
             var converter = new DynamoRequestConverter(new(), new(), new());
 
             // act
-            var expression = LambdaBody(record => record.Map["key"]);
+            var expression = LambdaBody(item => item.Map["key"]);
             var success = converter.TryParseAttributePath(expression, out var output);
 
             // assert

@@ -23,12 +23,12 @@ using LambdaSharp.DynamoDB.Native.Internal;
 
 namespace LambdaSharp.DynamoDB.Native.Query.Internal {
 
-    internal abstract class ADynamoQueryClause<TRecord> :
+    internal abstract class ADynamoQueryClause<TItem> :
         IDynamoQueryClause,
-        IDynamoQueryClause<TRecord>,
+        IDynamoQueryClause<TItem>,
         IDynamoQuerySortKeyConstraint,
-        IDynamoQuerySortKeyConstraint<TRecord>
-        where TRecord : class
+        IDynamoQuerySortKeyConstraint<TItem>
+        where TItem : class
     {
 
         //--- Constructors ---
@@ -51,28 +51,28 @@ namespace LambdaSharp.DynamoDB.Native.Query.Internal {
 
         //--- IDynamoQuerySelect Members ---
         IDynamoQueryClause IDynamoQuerySortKeyConstraint.WhereSKMatchesAny( )
-            => new DynamoQuerySelectAny<TRecord>(IndexName, PKName, SKName, PKValue, TypeFilters);
+            => new DynamoQuerySelectAny<TItem>(IndexName, PKName, SKName, PKValue, TypeFilters);
 
         IDynamoQueryClause IDynamoQuerySortKeyConstraint.WhereSKEquals(string skValue)
-            => new DynamoQuerySelectCompare<TRecord>(IndexName, PKName, SKName, PKValue, TypeFilters, DynamoQueryComparison.Equals, skValue);
+            => new DynamoQuerySelectCompare<TItem>(IndexName, PKName, SKName, PKValue, TypeFilters, DynamoQueryComparison.Equals, skValue);
 
         IDynamoQueryClause IDynamoQuerySortKeyConstraint.WhereSKIsGreaterThan(string skValue)
-            => new DynamoQuerySelectCompare<TRecord>(IndexName, PKName, SKName, PKValue, TypeFilters, DynamoQueryComparison.GreaterThan, skValue);
+            => new DynamoQuerySelectCompare<TItem>(IndexName, PKName, SKName, PKValue, TypeFilters, DynamoQueryComparison.GreaterThan, skValue);
 
         IDynamoQueryClause IDynamoQuerySortKeyConstraint.WhereSKIsGreaterThanOrEquals(string skValue)
-            => new DynamoQuerySelectCompare<TRecord>(IndexName, PKName, SKName, PKValue, TypeFilters, DynamoQueryComparison.GreaterThanOrEquals, skValue);
+            => new DynamoQuerySelectCompare<TItem>(IndexName, PKName, SKName, PKValue, TypeFilters, DynamoQueryComparison.GreaterThanOrEquals, skValue);
 
         IDynamoQueryClause IDynamoQuerySortKeyConstraint.WhereSKIsLessThan(string skValue)
-            => new DynamoQuerySelectCompare<TRecord>(IndexName, PKName, SKName, PKValue, TypeFilters, DynamoQueryComparison.LessThan, skValue);
+            => new DynamoQuerySelectCompare<TItem>(IndexName, PKName, SKName, PKValue, TypeFilters, DynamoQueryComparison.LessThan, skValue);
 
         IDynamoQueryClause IDynamoQuerySortKeyConstraint.WhereSKIsLessThanOrEquals(string skValue)
-            => new DynamoQuerySelectCompare<TRecord>(IndexName, PKName, SKName, PKValue, TypeFilters, DynamoQueryComparison.LessThanOrEquals, skValue);
+            => new DynamoQuerySelectCompare<TItem>(IndexName, PKName, SKName, PKValue, TypeFilters, DynamoQueryComparison.LessThanOrEquals, skValue);
 
         IDynamoQueryClause IDynamoQuerySortKeyConstraint.WhereSKIsBetween(string skLowerBound, string skUpperBound)
-            => new DynamoQuerySelectRange<TRecord>(IndexName, PKName, SKName, PKValue, TypeFilters, skLowerBound, skUpperBound);
+            => new DynamoQuerySelectRange<TItem>(IndexName, PKName, SKName, PKValue, TypeFilters, skLowerBound, skUpperBound);
 
         IDynamoQueryClause IDynamoQuerySortKeyConstraint.WhereSKBeginsWith(string skValuePrefix)
-            => new DynamoQuerySelectBeginsWith<TRecord>(IndexName, PKName, SKName, PKValue, TypeFilters, skValuePrefix);
+            => new DynamoQuerySelectBeginsWith<TItem>(IndexName, PKName, SKName, PKValue, TypeFilters, skValuePrefix);
 
 
         //--- IDynamoQueryClause Members ---
@@ -81,33 +81,33 @@ namespace LambdaSharp.DynamoDB.Native.Query.Internal {
             return this;
         }
 
-        //--- IDynamoQuerySelect<TRecord> Members ---
-        IDynamoQueryClause<TRecord> IDynamoQuerySortKeyConstraint<TRecord>.WhereSKMatchesAny()
-            => new DynamoQuerySelectAny<TRecord>(IndexName, PKName, SKName, PKValue, TypeFilters);
+        //--- IDynamoQuerySelect<TItem> Members ---
+        IDynamoQueryClause<TItem> IDynamoQuerySortKeyConstraint<TItem>.WhereSKMatchesAny()
+            => new DynamoQuerySelectAny<TItem>(IndexName, PKName, SKName, PKValue, TypeFilters);
 
-        IDynamoQueryClause<TRecord> IDynamoQuerySortKeyConstraint<TRecord>.WhereSKEquals(string skValue)
-            => new DynamoQuerySelectCompare<TRecord>(IndexName, PKName, SKName, PKValue, TypeFilters, DynamoQueryComparison.Equals, skValue);
+        IDynamoQueryClause<TItem> IDynamoQuerySortKeyConstraint<TItem>.WhereSKEquals(string skValue)
+            => new DynamoQuerySelectCompare<TItem>(IndexName, PKName, SKName, PKValue, TypeFilters, DynamoQueryComparison.Equals, skValue);
 
-        IDynamoQueryClause<TRecord> IDynamoQuerySortKeyConstraint<TRecord>.WhereSKIsGreaterThan(string skValue)
-            => new DynamoQuerySelectCompare<TRecord>(IndexName, PKName, SKName, PKValue, TypeFilters, DynamoQueryComparison.GreaterThan, skValue);
+        IDynamoQueryClause<TItem> IDynamoQuerySortKeyConstraint<TItem>.WhereSKIsGreaterThan(string skValue)
+            => new DynamoQuerySelectCompare<TItem>(IndexName, PKName, SKName, PKValue, TypeFilters, DynamoQueryComparison.GreaterThan, skValue);
 
-        IDynamoQueryClause<TRecord> IDynamoQuerySortKeyConstraint<TRecord>.WhereSKIsGreaterThanOrEquals(string skValue)
-            => new DynamoQuerySelectCompare<TRecord>(IndexName, PKName, SKName, PKValue, TypeFilters, DynamoQueryComparison.GreaterThanOrEquals, skValue);
+        IDynamoQueryClause<TItem> IDynamoQuerySortKeyConstraint<TItem>.WhereSKIsGreaterThanOrEquals(string skValue)
+            => new DynamoQuerySelectCompare<TItem>(IndexName, PKName, SKName, PKValue, TypeFilters, DynamoQueryComparison.GreaterThanOrEquals, skValue);
 
-        IDynamoQueryClause<TRecord> IDynamoQuerySortKeyConstraint<TRecord>.WhereSKIsLessThan(string skValue)
-            => new DynamoQuerySelectCompare<TRecord>(IndexName, PKName, SKName, PKValue, TypeFilters, DynamoQueryComparison.LessThan, skValue);
+        IDynamoQueryClause<TItem> IDynamoQuerySortKeyConstraint<TItem>.WhereSKIsLessThan(string skValue)
+            => new DynamoQuerySelectCompare<TItem>(IndexName, PKName, SKName, PKValue, TypeFilters, DynamoQueryComparison.LessThan, skValue);
 
-        IDynamoQueryClause<TRecord> IDynamoQuerySortKeyConstraint<TRecord>.WhereSKIsLessThanOrEquals(string skValue)
-            => new DynamoQuerySelectCompare<TRecord>(IndexName, PKName, SKName, PKValue, TypeFilters, DynamoQueryComparison.LessThanOrEquals, skValue);
+        IDynamoQueryClause<TItem> IDynamoQuerySortKeyConstraint<TItem>.WhereSKIsLessThanOrEquals(string skValue)
+            => new DynamoQuerySelectCompare<TItem>(IndexName, PKName, SKName, PKValue, TypeFilters, DynamoQueryComparison.LessThanOrEquals, skValue);
 
-        IDynamoQueryClause<TRecord> IDynamoQuerySortKeyConstraint<TRecord>.WhereSKIsBetween(string skLowerBound, string skUpperBound)
-            => new DynamoQuerySelectRange<TRecord>(IndexName, PKName, SKName, PKValue, TypeFilters, skLowerBound, skUpperBound);
+        IDynamoQueryClause<TItem> IDynamoQuerySortKeyConstraint<TItem>.WhereSKIsBetween(string skLowerBound, string skUpperBound)
+            => new DynamoQuerySelectRange<TItem>(IndexName, PKName, SKName, PKValue, TypeFilters, skLowerBound, skUpperBound);
 
-        IDynamoQueryClause<TRecord> IDynamoQuerySortKeyConstraint<TRecord>.WhereSKBeginsWith(string skValuePrefix)
-            => new DynamoQuerySelectBeginsWith<TRecord>(IndexName, PKName, SKName, PKValue, TypeFilters, skValuePrefix);
+        IDynamoQueryClause<TItem> IDynamoQuerySortKeyConstraint<TItem>.WhereSKBeginsWith(string skValuePrefix)
+            => new DynamoQuerySelectBeginsWith<TItem>(IndexName, PKName, SKName, PKValue, TypeFilters, skValuePrefix);
     }
 
-    internal class DynamoQuerySelectAny<TRecord> : ADynamoQueryClause<TRecord> where TRecord : class {
+    internal class DynamoQuerySelectAny<TItem> : ADynamoQueryClause<TItem> where TItem : class {
 
         //--- Constructors ---
         public DynamoQuerySelectAny(string? indexName, string pkName, string skName, string pkValue, IEnumerable<Type> typeFilters)
@@ -126,7 +126,7 @@ namespace LambdaSharp.DynamoDB.Native.Query.Internal {
         LessThanOrEquals
     }
 
-    internal class DynamoQuerySelectCompare<TRecord> : ADynamoQueryClause<TRecord> where TRecord : class {
+    internal class DynamoQuerySelectCompare<TItem> : ADynamoQueryClause<TItem> where TItem : class {
 
         //--- Constructors ---
         public DynamoQuerySelectCompare(string? indexName, string pkName, string skName, string pkValue, IEnumerable<Type> typeFilters, DynamoQueryComparison sortKeyComparison, string sortKeyComparisonOperand)
@@ -154,7 +154,7 @@ namespace LambdaSharp.DynamoDB.Native.Query.Internal {
             => $"{converter.GetAttributeName(PKName)} = {converter.GetExpressionValueName(PKValue)} AND {converter.GetAttributeName(SKName)} {SortKeyComparisonOperator} {converter.GetExpressionValueName(SortKeyComparisonOperand)}";
     }
 
-    internal class DynamoQuerySelectRange<TRecord> : ADynamoQueryClause<TRecord> where TRecord : class {
+    internal class DynamoQuerySelectRange<TItem> : ADynamoQueryClause<TItem> where TItem : class {
 
         //--- Constructors ---
         public DynamoQuerySelectRange(string? indexName, string pkName, string skName, string pkValue, IEnumerable<Type> typeFilters, string sortKeyLowerBound, string sortKeyUpperBound)
@@ -173,7 +173,7 @@ namespace LambdaSharp.DynamoDB.Native.Query.Internal {
             => $"{converter.GetAttributeName(PKName)} = {converter.GetExpressionValueName(PKValue)} AND {converter.GetAttributeName(SKName)} BETWEEN {converter.GetExpressionValueName(SortKeyLowerBound)} AND  {converter.GetExpressionValueName(SortKeyUpperBound)}";
     }
 
-    internal class DynamoQuerySelectBeginsWith<TRecord> : ADynamoQueryClause<TRecord> where TRecord : class {
+    internal class DynamoQuerySelectBeginsWith<TItem> : ADynamoQueryClause<TItem> where TItem : class {
 
         //--- Constructors ---
         public DynamoQuerySelectBeginsWith(string? indexName, string pkName, string skName, string pkValue, IEnumerable<Type> typeFilters, string sortKeyPrefix)

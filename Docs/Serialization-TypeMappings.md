@@ -38,7 +38,7 @@ class MyRecord {
     public HashSet<byte[]> ByteArraySet { get; set; }
 }
 
-var record = new MyRecord {
+var item = new MyRecord {
     StringSet = new HashSet<string>(),
     IntSet = new HashSet<int>(),
     LongSet = new HashSet<long>(),
@@ -47,7 +47,7 @@ var record = new MyRecord {
     ByteArraySet = new HashSet<byte[]>(ByteArrayEqualityComparer.Instance)
 };
 
-var serialized = DynamoSerializer.Serialize(record);
+var serialized = DynamoSerializer.Serialize(item);
 
 var deserialized = DynamoSerializer.Deserialize(serialized);
 
