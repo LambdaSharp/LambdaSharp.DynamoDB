@@ -12,7 +12,7 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
 
     <PackageId>LambdaSharp.DynamoDB.Native</PackageId>
-    <Version>1.0</Version>
+    <Version>1.0.0</Version>
     <Title>LambdaSharp (λ#) DynamoDB Native</Title>
     <Description>Serverless .NET for AWS - DynamoDB Native Library</Description>
     <Company>LambdaSharp</Company>
