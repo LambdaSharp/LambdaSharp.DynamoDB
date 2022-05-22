@@ -120,7 +120,7 @@ namespace Integration.LambdaSharp.DynamoDB.Native {
 
             // act
             var result = await Table.PutItem(customer.GetPrimaryKey(), customer)
-                .WithCondition(record => DynamoCondition.Exists(record))
+                .WithConditionItemExists()
                 .ExecuteAsync();
 
             // assert
@@ -136,7 +136,7 @@ namespace Integration.LambdaSharp.DynamoDB.Native {
 
             // act
             var result = await Table.PutItem(customer.GetPrimaryKey(), customer)
-                .WithCondition(record => DynamoCondition.DoesNotExist(record))
+                .WithConditionItemDoesNotExist()
                 .ExecuteAsync();
 
             // assert

@@ -51,10 +51,10 @@ public class ThriftBooksDataAccessClient : IThriftBooksDataAccess {
         // check if both records can be written
         var success = await Table.TransactWriteItems()
             .BeginPutItem(customer.GetPrimaryKey(), customer)
-                .WithCondition(record => DynamoCondition.DoesNotExist(record))
+                .WithConditionItemDoesNotExist()
             .End()
             .BeginPutItem(customerEmail.GetPrimaryKey(), customerEmail)
-                .WithCondition(record => DynamoCondition.DoesNotExist(record))
+                .WithConditionItemDoesNotExist()
             .End()
         .TryExecuteAsync();
         if(!success) {
@@ -93,13 +93,13 @@ public class ThriftBooksDataAccessClient : IThriftBooksDataAccess {
             }
             await batch.ExecuteAsync();
 
-            // skip the oder items that we stored
+            // skip the order items that we stored
             orderItems = orderItems.Skip(25);
         }
 
         // store order
         var success = await Table.PutItem(order.GetPrimaryKey(), order)
-            .WithCondition(record => DynamoCondition.DoesNotExist(record))
+            .WithConditionItemDoesNotExist()
             .Set("GSI1PK", string.Format(DataModel.ORDER_GSI1_PK_PATTERN, order.OrderId))
             .Set("GSI1SK", string.Format(DataModel.ORDER_GSI1_SK_PATTERN, order.OrderId))
             .Set("LSI1SK", string.Format(DataModel.ORDER_LSI1_SK_PATTERN, order.OrderId, order.Status))
