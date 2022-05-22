@@ -19,3 +19,4 @@ params.yml
 appsettings.Development.json
 src/CloudFormationResourceSpecification.json
 tmp/
+BenchmarkDotNet.Artifacts

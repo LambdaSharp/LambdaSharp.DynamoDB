@@ -1,0 +1,50 @@
+name: Publish Package
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 6.0.x
+
+      # Build LambdaSharp.DynamoDB.Serialization
+      - name: Restore dependencies
+        run: dotnet restore Source/LambdaSharp.DynamoDB.Serialization/LambdaSharp.DynamoDB.Serialization.csproj
+      - name: Build LambdaSharp.DynamoDB.Serialization
+        run: dotnet build --no-restore Source/LambdaSharp.DynamoDB.Serialization/LambdaSharp.DynamoDB.Serialization.csproj
+
+      # Build LambdaSharp.DynamoDB.Native
+      - name: Restore dependencies
+        run: dotnet restore Source/LambdaSharp.DynamoDB.Native/LambdaSharp.DynamoDB.Native.csproj
+      - name: Build LambdaSharp.DynamoDB.Native
+        run: dotnet build --no-restore Source/LambdaSharp.DynamoDB.Native/LambdaSharp.DynamoDB.Native.csproj
+
+      # Build Samples
+      - name: Build DynamoDBNativeSample Sample
+        run: dotnet build Samples/DynamoDBNativeSample/Sample.DynamoDBNative.DataAccess/Sample.DynamoDBNative.DataAccess.csproj
+
+      # Publish LambdaSharp.DynamoDB.Serialization
+      - name: Publish LambdaSharp.DynamoDB.Serialization
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: brandedoutcast/publish-nuget@v2.5.5
+        with:
+            PROJECT_FILE_PATH: Source/LambdaSharp.DynamoDB.Serialization/LambdaSharp.DynamoDB.Serialization.csproj
+            NUGET_KEY: ${{ secrets.NUGET_API_KEY }}
+
+      # Publish LambdaSharp.DynamoDB.Native
+      - name: Publish LambdaSharp.DynamoDB.Native
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: brandedoutcast/publish-nuget@v2.5.5
+        with:
+            PROJECT_FILE_PATH: Source/LambdaSharp.DynamoDB.Native/LambdaSharp.DynamoDB.Native.csproj
+            NUGET_KEY: ${{ secrets.NUGET_API_KEY }}
