@@ -25,7 +25,7 @@ using LambdaSharp.DynamoDB.Native.Operations;
 namespace LambdaSharp.DynamoDB.Native {
 
     /// <summary>
-    /// Interface exposing DynamoDB operations in a type-safe mannter using LINQ expressions.
+    /// Interface exposing DynamoDB operations in a type-safe manner using LINQ expressions.
     /// </summary>
     public interface IDynamoTable {
 

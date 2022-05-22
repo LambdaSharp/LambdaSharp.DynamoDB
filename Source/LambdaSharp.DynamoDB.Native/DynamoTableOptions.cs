@@ -29,8 +29,6 @@ namespace LambdaSharp.DynamoDB.Native {
     /// </summary>
     public class DynamoTableOptions {
 
-        //--- TYpes ---
-
         //--- Properties ---
 
         /// <summary>

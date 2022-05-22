@@ -272,8 +272,6 @@ namespace LambdaSharp.DynamoDB.Native {
         internal object? DeserializeItemUsingItemType(Dictionary<string, AttributeValue> item, Type expectedItemType, Dictionary<string, Type>? requestExpectedTypes) {
             Type? type = null;
 
-            // TODO: what should take preference, the item type or the expected type?
-
             // determine deserialization type by inspecting item meta-data
             if(
                 item.TryGetValue("_t", out var itemTypeAttribute)
